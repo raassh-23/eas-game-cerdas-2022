@@ -108,7 +108,13 @@ public class SpaceshipController : MonoBehaviour
 
             CheckpointController cp = other.gameObject.GetComponent<CheckpointController>();
 
-            if (cp == nextCheckpoint)
+            Vector2 dir = rigidbody2d.velocity;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            Quaternion dirAngle = Quaternion.AngleAxis(angle, Vector3.forward);
+
+            bool isInRange = cp.transform.eulerAngles.z >= dirAngle.eulerAngles.z - 90 && cp.transform.eulerAngles.z <= dirAngle.eulerAngles.z + 90;
+
+            if (isInRange && cp == nextCheckpoint)
             {
                 currentCheckpoint = cp;
 
@@ -169,7 +175,7 @@ public class SpaceshipController : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Meteor") || other.gameObject.CompareTag("Bullet")) {
+        if (other.gameObject.CompareTag("Bullet")) {
             ResetSpaceship();
         }
     }
