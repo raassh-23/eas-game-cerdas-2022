@@ -26,7 +26,18 @@ public class SpaceshipController : MonoBehaviour
     [SerializeField]
     private float shootCooldown = 1;
 
+    [SerializeField]
+    private GameObject minePrefab;
+
+    [SerializeField]
+    private float mineCooldown = 1;
+
+    [SerializeField]
+    private Transform mineSpawn;
+
     public float ammo;
+
+    public float mines;
 
     private CheckpointController currentCheckpoint;
     public CheckpointController nextCheckpoint { get; private set; }
@@ -41,6 +52,8 @@ public class SpaceshipController : MonoBehaviour
     private float outOfTrackTimer;
 
     private float nextShootTime;
+
+    private float nextMineTime;
 
     private void Start()
     {
@@ -59,13 +72,15 @@ public class SpaceshipController : MonoBehaviour
             outOfTrackTimer += Time.deltaTime;
             if (outOfTrackTimer >= outOfTrackTime)
             {
-                transform.position = currentCheckpoint.transform.position;
-                rigidbody2d.velocity = Vector2.zero;
-                isInTrack = true;
+                ResetSpaceship();
             }
         }
 
         if (Input.GetKey(KeyCode.Space)) {
+            DropMine();
+        }
+
+        if (Input.GetMouseButton(0)) {
             Shoot();
         }
     }
@@ -103,6 +118,10 @@ public class SpaceshipController : MonoBehaviour
                 Debug.Log("Next Checkpoint " + nextCheckpoint.order);
             }
         }
+
+        if (other.gameObject.CompareTag("Mine")) {
+            ResetSpaceship();
+        }
     }
 
     private void OnTriggerStay2D(Collider2D other) {
@@ -131,6 +150,27 @@ public class SpaceshipController : MonoBehaviour
                 .GetComponent<BulletController>();
             bullet.bulletSpeed = bulletSpeed;
             bullet.bulletRange = bulletRange;
+        }
+    }
+
+    private void DropMine() {
+        if (Time.time > nextMineTime && mines > 0)
+        {
+            nextMineTime = Time.time + mineCooldown;
+            mines--;
+            Instantiate(minePrefab, mineSpawn.position, transform.rotation);
+        }
+    }
+
+    private void ResetSpaceship() {
+        transform.position = currentCheckpoint.transform.position;
+        rigidbody2d.velocity = Vector2.zero;
+        isInTrack = true;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.CompareTag("Meteor") || other.gameObject.CompareTag("Bullet")) {
+            ResetSpaceship();
         }
     }
 }

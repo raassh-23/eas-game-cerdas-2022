@@ -22,9 +22,8 @@ public class BulletController : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.tag == "Meteor") {
+        if (other.gameObject.tag == "Meteor" || other.gameObject.tag == "Spaceship") {
             Destroy(gameObject);
-            other.gameObject.GetComponent<MeteorController>().DestroyMeteor();
         }
     }
 }
