@@ -29,7 +29,7 @@ public class SpaceshipController : MonoBehaviour
     public float ammo;
 
     private CheckpointController currentCheckpoint;
-    public int nextCheckpoint { get; private set; }
+    public CheckpointController nextCheckpoint { get; private set; }
 
     private Rigidbody2D rigidbody2d;
 
@@ -46,7 +46,7 @@ public class SpaceshipController : MonoBehaviour
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
         currentCheckpoint = null;
-        nextCheckpoint = 0;
+        nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
         isInTrack = true;
         outOfTrackTimer = 0;
         nextShootTime = 0;
@@ -93,21 +93,14 @@ public class SpaceshipController : MonoBehaviour
 
             CheckpointController cp = other.gameObject.GetComponent<CheckpointController>();
 
-            if (cp.order == nextCheckpoint)
+            if (cp == nextCheckpoint)
             {
                 currentCheckpoint = cp;
 
-                if (cp.isLast)
-                {
-                    nextCheckpoint = 0;
-                }
-                else
-                {
-                    nextCheckpoint = currentCheckpoint.order + 1;
-                }
+                nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
 
                 Debug.Log("Checkpoint " + currentCheckpoint.order);
-                Debug.Log("Next Checkpoint " + nextCheckpoint);
+                Debug.Log("Next Checkpoint " + nextCheckpoint.order);
             }
         }
     }
