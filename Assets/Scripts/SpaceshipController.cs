@@ -11,8 +11,25 @@ public class SpaceshipController : MonoBehaviour
     [SerializeField]
     private float rotateSpeed;
 
+    [SerializeField]
+    private GameObject bulletPrefab;
+
+    [SerializeField]
+    private Transform bulletSpawn;
+
+    [SerializeField]
+    private float bulletSpeed = 5;
+
+    [SerializeField]
+    private float bulletRange = 10;
+
+    [SerializeField]
+    private float shootCooldown = 1;
+
+    public float ammo;
+
     private CheckpointController currentCheckpoint;
-    private int nextCheckpoint = 0;
+    public int nextCheckpoint { get; private set; }
 
     private Rigidbody2D rigidbody2d;
 
@@ -23,11 +40,16 @@ public class SpaceshipController : MonoBehaviour
 
     private float outOfTrackTimer;
 
+    private float nextShootTime;
+
     private void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
         currentCheckpoint = null;
+        nextCheckpoint = 0;
         isInTrack = true;
+        outOfTrackTimer = 0;
+        nextShootTime = 0;
     }
 
     private void Update()
@@ -41,6 +63,10 @@ public class SpaceshipController : MonoBehaviour
                 rigidbody2d.velocity = Vector2.zero;
                 isInTrack = true;
             }
+        }
+
+        if (Input.GetKey(KeyCode.Space)) {
+            Shoot();
         }
     }
 
@@ -99,6 +125,19 @@ public class SpaceshipController : MonoBehaviour
         {
             isInTrack = false;
             outOfTrackTimer = 0;
+        }
+    }
+
+    public void Shoot()
+    {
+        if (Time.time > nextShootTime && ammo > 0)
+        {
+            nextShootTime = Time.time + shootCooldown;
+            ammo--;
+            BulletController bullet = Instantiate(bulletPrefab, bulletSpawn.position, transform.rotation)
+                .GetComponent<BulletController>();
+            bullet.bulletSpeed = bulletSpeed;
+            bullet.bulletRange = bulletRange;
         }
     }
 }

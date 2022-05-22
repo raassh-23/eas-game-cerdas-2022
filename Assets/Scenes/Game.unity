@@ -702,11 +702,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5503436536478087723, guid: b03091e6172316a41b4a789fcaf4c8c5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.9
+      value: 6.1299996
       objectReference: {fileID: 0}
     - target: {fileID: 5503436536478087723, guid: b03091e6172316a41b4a789fcaf4c8c5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.04
+      value: 3.5915997
       objectReference: {fileID: 0}
     - target: {fileID: 5503436536478087723, guid: b03091e6172316a41b4a789fcaf4c8c5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1643,7 +1643,6 @@ GameObject:
   - component: {fileID: 847188585}
   - component: {fileID: 847188584}
   - component: {fileID: 847188588}
-  - component: {fileID: 847188587}
   m_Layer: 0
   m_Name: RaceTrackBorderRenderer2
   m_TagString: RaceTrackBorder
@@ -1774,18 +1773,6 @@ Transform:
   m_Father: {fileID: 1670270207}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &847188587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 847188583}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ee1f359e2af78445a04f0fdd3b6b1f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!60 &847188588
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1838,7 +1825,6 @@ GameObject:
   - component: {fileID: 972482990}
   - component: {fileID: 972482989}
   - component: {fileID: 972482993}
-  - component: {fileID: 972482992}
   m_Layer: 0
   m_Name: RaceTrackBorderRenderer1
   m_TagString: RaceTrackBorder
@@ -1969,18 +1955,6 @@ Transform:
   m_Father: {fileID: 1670270207}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &972482992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 972482988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ee1f359e2af78445a04f0fdd3b6b1f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!60 &972482993
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2738,11 +2712,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 59747235698681822, guid: 0cb050b0afe8c00469cfb1ffe4a3d339, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 11.44
+      value: 10.74
       objectReference: {fileID: 0}
     - target: {fileID: 59747235698681822, guid: 0cb050b0afe8c00469cfb1ffe4a3d339, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.49
+      value: -1.51
       objectReference: {fileID: 0}
     - target: {fileID: 59747235698681822, guid: 0cb050b0afe8c00469cfb1ffe4a3d339, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2915,7 +2889,7 @@ GameObject:
   - component: {fileID: 1670270208}
   m_Layer: 0
   m_Name: RaceTrack
-  m_TagString: Untagged
+  m_TagString: RaceTrack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2965,8 +2939,8 @@ PolygonCollider2D:
     m_Paths:
     - - {x: -9.11, y: 8.11}
       - {x: 8.18, y: 8.16}
-      - {x: -4.94, y: 3.76}
       - {x: 6.13, y: 3.5916}
+      - {x: -4.94, y: 3.76}
 --- !u!114 &1670270209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3425,7 +3399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 59747235698681822, guid: 0cb050b0afe8c00469cfb1ffe4a3d339, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.03
+      value: 6.11
       objectReference: {fileID: 0}
     - target: {fileID: 59747235698681822, guid: 0cb050b0afe8c00469cfb1ffe4a3d339, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3596,11 +3570,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9055639450618891346, guid: 4419f3c67afa5434abf5b7d7fafcf455, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.34
+      value: 0.59
       objectReference: {fileID: 0}
     - target: {fileID: 9055639450618891346, guid: 4419f3c67afa5434abf5b7d7fafcf455, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.91
+      value: 6.48
       objectReference: {fileID: 0}
     - target: {fileID: 9055639450618891346, guid: 4419f3c67afa5434abf5b7d7fafcf455, type: 3}
       propertyPath: m_LocalPosition.z

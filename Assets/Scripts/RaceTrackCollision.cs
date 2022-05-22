@@ -10,7 +10,7 @@ public class RaceTrackCollision : MonoBehaviour
     [SerializeField]
     private bool isLooping;
 
-    private void Start()
+    private void Awake()
     {
         polygonCollider2D = GetComponent<PolygonCollider2D>();
         raceTrackBorderControllers = new List<RaceTrackBorderController>();

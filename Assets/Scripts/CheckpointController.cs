@@ -10,10 +10,21 @@ public class CheckpointController : MonoBehaviour
 
     public bool isLast;
 
+    private SpaceshipController spaceshipController;
+
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        spriteRenderer.color = new Color(1, 1, 1, 0f);
+        spaceshipController = GameObject.FindGameObjectWithTag("Spaceship").GetComponent<SpaceshipController>();
+    }
+
+    private void Update() {
+        if (spaceshipController.nextCheckpoint == order) {
+            spriteRenderer.color = new Color(1, 1, 1, 1f);
+        } else {
+            spriteRenderer.color = new Color(1, 1, 1, 0f);
+        }
+        
     }
 }
