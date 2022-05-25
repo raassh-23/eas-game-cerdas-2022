@@ -210,6 +210,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5193602961495969049, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
   m_PrefabInstance: {fileID: 1886825510}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &94008012 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5193602960494469004, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+  m_PrefabInstance: {fileID: 1886825510}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a8bd9c07e531a642bfcfe4c6a645475, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &499004873 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5193602959904459047, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
@@ -393,6 +404,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   order: 0
   isLast: 0
+  spaceshipController: {fileID: 94008012}
 --- !u!61 &1854912586
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -547,6 +559,22 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3647514239732650274, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3647514239732650274, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646287287429727390, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: m_BehaviorType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646287287429727390, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: m_BrainParameters.VectorObservationSize
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 5193602960373644382, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -558,6 +586,14 @@ PrefabInstance:
     - target: {fileID: 5193602960494469002, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
       propertyPath: m_SortingOrder
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5193602960494469005, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 5193602960494469005, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.47
       objectReference: {fileID: 0}
     - target: {fileID: 5193602960494469005, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -589,11 +625,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5611098663549543401, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.2
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: 5611098663549543401, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.53
+      value: 3.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 6859531309049273692, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6859531309049273692, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.6099999
+      objectReference: {fileID: 0}
+    - target: {fileID: 7701451219421614313, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: maxLap
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8307843274190159390, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
       propertyPath: m_RootOrder
@@ -639,6 +687,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   order: 1
   isLast: 0
+  spaceshipController: {fileID: 94008012}
 --- !u!61 &59747234309895810
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -840,6 +889,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   order: 4
   isLast: 0
+  spaceshipController: {fileID: 94008012}
 --- !u!4 &59747234700160350
 Transform:
   m_ObjectHideFlags: 0
@@ -868,6 +918,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   order: 3
   isLast: 0
+  spaceshipController: {fileID: 94008012}
 --- !u!1 &59747234812090377
 GameObject:
   m_ObjectHideFlags: 0
@@ -1011,6 +1062,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   order: 2
   isLast: 0
+  spaceshipController: {fileID: 94008012}
 --- !u!61 &59747235196641002
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1116,6 +1168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   order: 5
   isLast: 0
+  spaceshipController: {fileID: 94008012}
 --- !u!1 &59747235333962713
 GameObject:
   m_ObjectHideFlags: 0
@@ -1254,6 +1307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   order: 6
   isLast: 0
+  spaceshipController: {fileID: 94008012}
 --- !u!1 &59747235933840581
 GameObject:
   m_ObjectHideFlags: 0
@@ -1455,6 +1509,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   order: 7
   isLast: 1
+  spaceshipController: {fileID: 94008012}
 --- !u!1 &59747236263922871
 GameObject:
   m_ObjectHideFlags: 0

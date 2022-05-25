@@ -73,6 +73,9 @@ GameObject:
   - component: {fileID: 9055639450618891345}
   - component: {fileID: 9055639450618891344}
   - component: {fileID: 9055639450618891347}
+  - component: {fileID: 8486356002847725377}
+  - component: {fileID: 6575178374612292797}
+  - component: {fileID: 3131893252875907967}
   m_Layer: 0
   m_Name: Spaceship
   m_TagString: Untagged
@@ -206,6 +209,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8bd9c07e531a642bfcfe4c6a645475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 0
   maxSpeed: 10
   acceleration: 6
   rotateSpeed: 180
@@ -213,11 +220,95 @@ MonoBehaviour:
   bulletSpawn: {fileID: 512032375752967463}
   bulletSpeed: 20
   bulletRange: 25
+  initAmmo: 10
   shootCooldown: 1
   minePrefab: {fileID: 7848703301543477784, guid: bb9dd14a1d176654db8a4e50f6344a6f, type: 3}
   mineCooldown: 1
+  initMines: 3
   mineSpawn: {fileID: 1129855719684946341}
   ammo: 10
   mines: 3
+  initialHealth: 10
+  health: 0
   isInTrack: 0
   outOfTrackTime: 0
+  currentLap: 0
+  startPosition: {fileID: 0}
+  onFinishedRace:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &8486356002847725377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9055639450618891348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BrainParameters:
+    VectorObservationSize: 19
+    NumStackedVectorObservations: 3
+    m_ActionSpec:
+      m_NumContinuousActions: 2
+      BranchSizes: 0200000002000000
+    VectorActionSize: 
+    VectorActionDescriptions: []
+    VectorActionSpaceType: 0
+    hasUpgradedBrainParametersWithActionSpec: 1
+  m_Model: {fileID: 0}
+  m_InferenceDevice: 0
+  m_BehaviorType: 0
+  m_BehaviorName: Spaceship
+  TeamId: 0
+  m_UseChildSensors: 1
+  m_UseChildActuators: 1
+  m_DeterministicInference: 0
+  m_ObservableAttributeHandling: 0
+--- !u!114 &6575178374612292797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9055639450618891348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f67c7e722ba14acd9153bb4488bff6e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SensorName: SpaceShipRay
+  m_DetectableTags:
+  - Spaceship
+  - RaceTrackBorder
+  - Meteor
+  - PowerUp
+  - Bullet
+  - Mine
+  m_RaysPerDirection: 4
+  m_MaxRayDegrees: 180
+  m_SphereCastRadius: 0.5
+  m_RayLength: 20
+  m_RayLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  m_ObservationStacks: 3
+  rayHitColor: {r: 1, g: 0, b: 0, a: 1}
+  rayMissColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &3131893252875907967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9055639450618891348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DecisionPeriod: 5
+  TakeActionsBetweenDecisions: 1
