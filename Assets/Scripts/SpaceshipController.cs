@@ -60,6 +60,11 @@ public class SpaceshipController : MonoBehaviour
 
     private float nextMineTime;
 
+    public int currentLap;
+
+    [SerializeField]
+    private Transform startPosition;
+
     private void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
@@ -74,7 +79,9 @@ public class SpaceshipController : MonoBehaviour
         outOfTrackTimer = 0;
         nextShootTime = 0;
         nextMineTime = 0;
+        currentLap = -1;
         health = initialHealth;
+        transform.position = startPosition.position;
     }
 
     private void Update()
@@ -230,6 +237,10 @@ public class SpaceshipController : MonoBehaviour
             currentCheckpoint = cp;
 
             nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
+
+            if (cp.order == 0) {
+                currentLap++;
+            }
 
             Debug.Log("Checkpoint " + currentCheckpoint.order);
             Debug.Log("Next Checkpoint " + nextCheckpoint.order);
