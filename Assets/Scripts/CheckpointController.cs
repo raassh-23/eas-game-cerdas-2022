@@ -10,6 +10,7 @@ public class CheckpointController : MonoBehaviour
 
     public bool isLast;
 
+    [SerializeField]
     private SpaceshipController spaceshipController;
 
     static public List<CheckpointController> checkpoints = new List<CheckpointController>();
@@ -18,7 +19,6 @@ public class CheckpointController : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        spaceshipController = GameObject.FindGameObjectWithTag("Spaceship").GetComponent<SpaceshipController>();
         checkpoints.Add(this);
     }
 

@@ -1,8 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.MLAgents;
+using Unity.MLAgents.Sensors;
+using Unity.MLAgents.Actuators;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class SpaceshipController : MonoBehaviour
+public class SpaceshipController : Agent
 {
     [SerializeField]
     private float maxSpeed;
@@ -24,6 +28,9 @@ public class SpaceshipController : MonoBehaviour
     private float bulletRange = 10;
 
     [SerializeField]
+    private int initAmmo = 10;
+
+    [SerializeField]
     private float shootCooldown = 1;
 
     [SerializeField]
@@ -31,6 +38,9 @@ public class SpaceshipController : MonoBehaviour
 
     [SerializeField]
     private float mineCooldown = 1;
+
+    [SerializeField]
+    private int initMines = 3;
 
     [SerializeField]
     private Transform mineSpawn;
@@ -61,13 +71,45 @@ public class SpaceshipController : MonoBehaviour
     private float nextMineTime;
 
     public int currentLap;
+    private int maxLap;
 
     [SerializeField]
     private Transform startPosition;
 
+    private int checkPointSinceLastAward;
+    private int lapSinceLastAward;
+
+    private EnvironmentManager environmentManager;
+    private float existentialReward;
+
+    public UnityEvent<SpaceshipController> onFinishedRace;
+
+    private bool canShoot {
+        get {
+            return Time.time > nextShootTime && ammo > 0;
+        }
+    }
+
+    private bool canDropMine {
+        get {
+            return Time.time > nextMineTime && mines > 0;
+        }
+    }
+
     private void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
+
+        environmentManager = GetComponentInParent<EnvironmentManager>();
+
+        if (environmentManager == null) {
+            existentialReward = 1f / 20000;
+            maxLap = 3;
+        } else {
+            existentialReward = 1f / environmentManager.maxStep;
+            maxLap = environmentManager.maxLap;
+        }
+
         init();
     }
 
@@ -80,6 +122,10 @@ public class SpaceshipController : MonoBehaviour
         nextShootTime = 0;
         nextMineTime = 0;
         currentLap = -1;
+        checkPointSinceLastAward = 0;
+        lapSinceLastAward = 0;
+        ammo = initAmmo;
+        mines = initMines;
         health = initialHealth;
         transform.position = startPosition.position;
     }
@@ -94,23 +140,85 @@ public class SpaceshipController : MonoBehaviour
                 ResetSpaceship();
             }
         }
-
-        if (Input.GetKey(KeyCode.Space))
-        {
-            DropMine();
-        }
-
-        if (Input.GetMouseButton(0))
-        {
-            Shoot();
-        }
     }
 
-    private void FixedUpdate()
+    public override void OnEpisodeBegin()
+    {
+        Debug.Log("Episode begin");
+        init();
+    }
+
+    public override void Heuristic(in ActionBuffers actionsOut)
     {
         float h = -Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
+        actionsOut.ContinuousActions.Array[0] = h;
+        actionsOut.ContinuousActions.Array[1] = v;
+
+        if (Input.GetMouseButton(0))
+        {
+            actionsOut.DiscreteActions.Array[0] = 1;
+        }
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            actionsOut.DiscreteActions.Array[1] = 1;
+        }
+    }
+
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        sensor.AddObservation(health);
+        sensor.AddObservation(ammo);
+        sensor.AddObservation(mines);
+        sensor.AddObservation(transform.position);
+        sensor.AddObservation(transform.rotation);
+        sensor.AddObservation(rigidbody2d.velocity);
+        sensor.AddObservation(nextCheckpoint.transform.position);
+        sensor.AddObservation(nextCheckpoint.transform.rotation);
+    }
+
+    public override void OnActionReceived(ActionBuffers actions)
+    {
+        float h = actions.ContinuousActions[0];
+        float v = actions.ContinuousActions[1];
+
+        MoveShip(h, v);
+
+        switch (actions.DiscreteActions[0])
+        {
+            case 1:
+                Shoot();
+                break;
+            default:
+                break;
+        }
+
+        switch (actions.DiscreteActions[1])
+        {
+            case 1:
+                DropMine();
+                break;
+            default:
+                break;
+        }
+
+        AddReward(checkPointSinceLastAward * 0.05f);
+        AddReward(lapSinceLastAward * 0.5f);
+        AddReward(-1 * existentialReward);
+
+        checkPointSinceLastAward = 0;
+        lapSinceLastAward = 0;
+    }
+
+    public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
+    {
+        actionMask.SetActionEnabled(0, 1, canShoot);
+        actionMask.SetActionEnabled(1, 1, canDropMine);
+    }
+
+    private void MoveShip(float h, float v) {
         Vector2 speed = -1 * transform.up * (v * acceleration);
         rigidbody2d.AddForce(speed);
         transform.Rotate(Vector3.forward, h * rotateSpeed * Time.fixedDeltaTime);
@@ -157,7 +265,7 @@ public class SpaceshipController : MonoBehaviour
 
     public void Shoot()
     {
-        if (Time.time > nextShootTime && ammo > 0)
+        if (canShoot)
         {
             nextShootTime = Time.time + shootCooldown;
             ammo--;
@@ -170,7 +278,7 @@ public class SpaceshipController : MonoBehaviour
 
     private void DropMine()
     {
-        if (Time.time > nextMineTime && mines > 0)
+        if (canDropMine)
         {
             nextMineTime = Time.time + mineCooldown;
             mines--;
@@ -180,7 +288,13 @@ public class SpaceshipController : MonoBehaviour
 
     private void ResetSpaceship()
     {
-        transform.position = currentCheckpoint.transform.position;
+        if (currentCheckpoint != null)
+        {
+            transform.position = currentCheckpoint.transform.position;
+        } else {
+            transform.position = startPosition.position;
+        }
+
         rigidbody2d.velocity = Vector2.zero;
         isInTrack = true;
     }
@@ -226,24 +340,35 @@ public class SpaceshipController : MonoBehaviour
 
         CheckpointController cp = other.GetComponent<CheckpointController>();
 
-        Vector2 dir = rigidbody2d.velocity;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        Quaternion dirAngle = Quaternion.AngleAxis(angle, Vector3.forward);
+        Vector2 dir = rigidbody2d.velocity.normalized;
+        Vector2 cpDir = new Vector2(Mathf.Cos(cp.transform.rotation.eulerAngles.z * Mathf.Deg2Rad),
+            Mathf.Sin(cp.transform.rotation.eulerAngles.z * Mathf.Deg2Rad));
 
-        bool isInRange = cp.transform.eulerAngles.z >= dirAngle.eulerAngles.z - 90 && cp.transform.eulerAngles.z <= dirAngle.eulerAngles.z + 90;
+        Debug.Log(dir + " " + cpDir);
+        Debug.Log(Vector2.Dot(dir, cpDir));
+
+        bool isInRange = Vector2.Dot(dir, cpDir) > 0;
 
         if (isInRange && cp == nextCheckpoint)
         {
             currentCheckpoint = cp;
-
             nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
-
-            if (cp.order == 0) {
-                currentLap++;
-            }
+            checkPointSinceLastAward++;
 
             Debug.Log("Checkpoint " + currentCheckpoint.order);
             Debug.Log("Next Checkpoint " + nextCheckpoint.order);
+
+            if (cp.order == 0) {
+                currentLap++;
+                lapSinceLastAward++;
+
+                if (currentLap >= maxLap)
+                {
+                    Debug.Log("You win!");
+                    onFinishedRace?.Invoke(this);
+                    return;
+                }
+            }
         }
     }
 }

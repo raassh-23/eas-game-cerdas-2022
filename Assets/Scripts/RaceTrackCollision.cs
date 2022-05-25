@@ -65,7 +65,7 @@ public class RaceTrackCollision : MonoBehaviour
                 polygonCollider2D.SetPath(numberOfLines, currentColliderPoints.ConvertAll(p => (Vector2)transform.InverseTransformPoint(p)));
             }
 
-            onTrackCollisionFinished.Invoke();
+            onTrackCollisionFinished?.Invoke();
         }
         else
         {
