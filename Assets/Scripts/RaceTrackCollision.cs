@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RaceTrackCollision : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class RaceTrackCollision : MonoBehaviour
 
     [SerializeField]
     private bool isLooping;
+
+    public UnityEvent onTrackCollisionFinished;
 
     private void Awake()
     {
@@ -61,10 +64,11 @@ public class RaceTrackCollision : MonoBehaviour
                 };
                 polygonCollider2D.SetPath(numberOfLines, currentColliderPoints.ConvertAll(p => (Vector2)transform.InverseTransformPoint(p)));
             }
+
+            onTrackCollisionFinished.Invoke();
         }
         else
         {
-
             polygonCollider2D.pathCount = 0;
         }
     }

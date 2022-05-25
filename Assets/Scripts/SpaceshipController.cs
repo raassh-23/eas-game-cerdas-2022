@@ -39,6 +39,11 @@ public class SpaceshipController : MonoBehaviour
 
     public float mines;
 
+    [SerializeField]
+    private float initialHealth = 10;
+
+    public float health;
+
     private CheckpointController currentCheckpoint;
     public CheckpointController nextCheckpoint { get; private set; }
 
@@ -58,11 +63,18 @@ public class SpaceshipController : MonoBehaviour
     private void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
+        init();
+    }
+
+    private void init()
+    {
         currentCheckpoint = null;
         nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
         isInTrack = true;
         outOfTrackTimer = 0;
         nextShootTime = 0;
+        nextMineTime = 0;
+        health = initialHealth;
     }
 
     private void Update()
@@ -76,11 +88,13 @@ public class SpaceshipController : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.Space)) {
+        if (Input.GetKey(KeyCode.Space))
+        {
             DropMine();
         }
 
-        if (Input.GetMouseButton(0)) {
+        if (Input.GetMouseButton(0))
+        {
             Shoot();
         }
     }
@@ -104,33 +118,21 @@ public class SpaceshipController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Checkpoint"))
         {
-            Debug.Log("Collide with checkpoint");
-
-            CheckpointController cp = other.gameObject.GetComponent<CheckpointController>();
-
-            Vector2 dir = rigidbody2d.velocity;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            Quaternion dirAngle = Quaternion.AngleAxis(angle, Vector3.forward);
-
-            bool isInRange = cp.transform.eulerAngles.z >= dirAngle.eulerAngles.z - 90 && cp.transform.eulerAngles.z <= dirAngle.eulerAngles.z + 90;
-
-            if (isInRange && cp == nextCheckpoint)
-            {
-                currentCheckpoint = cp;
-
-                nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
-
-                Debug.Log("Checkpoint " + currentCheckpoint.order);
-                Debug.Log("Next Checkpoint " + nextCheckpoint.order);
-            }
+            CheckCheckPoint(other.gameObject);
         }
 
-        if (other.gameObject.CompareTag("Mine")) {
+        if (other.gameObject.CompareTag("Mine"))
+        {
             ResetSpaceship();
         }
-    }
 
-    private void OnTriggerStay2D(Collider2D other) {
+        if (other.gameObject.CompareTag("PowerUp"))
+        {
+            PowerUp();
+        }
+    }
+    private void OnTriggerStay2D(Collider2D other)
+    {
         if (other.gameObject.CompareTag("RaceTrack"))
         {
             isInTrack = true;
@@ -159,7 +161,8 @@ public class SpaceshipController : MonoBehaviour
         }
     }
 
-    private void DropMine() {
+    private void DropMine()
+    {
         if (Time.time > nextMineTime && mines > 0)
         {
             nextMineTime = Time.time + mineCooldown;
@@ -168,15 +171,68 @@ public class SpaceshipController : MonoBehaviour
         }
     }
 
-    private void ResetSpaceship() {
+    private void ResetSpaceship()
+    {
         transform.position = currentCheckpoint.transform.position;
         rigidbody2d.velocity = Vector2.zero;
         isInTrack = true;
     }
 
-    private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Bullet")) {
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Bullet") || other.gameObject.CompareTag("Meteor"))
+        {
+            TakeDamage(1);
+        }
+    }
+
+    private void TakeDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
             ResetSpaceship();
+        }
+    }
+
+    private void PowerUp()
+    {
+        int randNum = Random.Range(1, 4);
+
+        switch (randNum)
+        {
+            case 1:
+                ammo += 10;
+                break;
+            case 2:
+                mines += 3;
+                break;
+            case 3:
+                health += 5;
+                break;
+        }
+    }
+
+    private void CheckCheckPoint(GameObject other)
+    {
+        Debug.Log("Collide with checkpoint");
+
+        CheckpointController cp = other.GetComponent<CheckpointController>();
+
+        Vector2 dir = rigidbody2d.velocity;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        Quaternion dirAngle = Quaternion.AngleAxis(angle, Vector3.forward);
+
+        bool isInRange = cp.transform.eulerAngles.z >= dirAngle.eulerAngles.z - 90 && cp.transform.eulerAngles.z <= dirAngle.eulerAngles.z + 90;
+
+        if (isInRange && cp == nextCheckpoint)
+        {
+            currentCheckpoint = cp;
+
+            nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
+
+            Debug.Log("Checkpoint " + currentCheckpoint.order);
+            Debug.Log("Next Checkpoint " + nextCheckpoint.order);
         }
     }
 }

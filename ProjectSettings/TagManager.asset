@@ -8,6 +8,10 @@ TagManager:
   - Checkpoint
   - RaceTrackBorder
   - RaceTrack
+  - Bullet
+  - Meteor
+  - Mine
+  - PowerUp
   layers:
   - Default
   - TransparentFX
