@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    public float bulletSpeed;
-    public float bulletRange;
+    public float bulletSpeed = 5;
+    public float bulletRange = 10;
     public float curDistance;
 
     private void Start() {

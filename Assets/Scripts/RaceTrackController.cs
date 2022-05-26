@@ -45,6 +45,18 @@ public class RaceTrackController : MonoBehaviour
         });
     }
 
+    public void ResetObjects() {
+        StopAllCoroutines();
+        foreach (Transform child in meteorsGroup) {
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in powerUpsGroup) {
+            Destroy(child.gameObject);
+        }
+
+        hasSpawnedObjects = false;
+    }
+
     private IEnumerator SpawnPowerUps() {
         for (int i = 0; i < powerUpsMaxCount; i++) {
             GameObject powerUpInstance = Instantiate(powerUp, powerUpsGroup);

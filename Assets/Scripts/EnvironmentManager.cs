@@ -10,6 +10,9 @@ public class EnvironmentManager : MonoBehaviour
     public int maxStep = 20000;
     public int maxLap = 3;
 
+    [SerializeField]
+    private RaceTrackController raceTrackController;
+
     private int timer = 0;
 
     public bool isTraining = true;
@@ -46,14 +49,16 @@ public class EnvironmentManager : MonoBehaviour
             Debug.Log("End episode, " + winner.name + " won");
         }
 
+        raceTrackController.ResetObjects();
+
         foreach (SpaceshipController spaceshipController in spaceshipControllers) {
             if (spaceshipController == winner) {
                 spaceshipController.AddReward(1f);
-                spaceshipController.EndEpisode();
             } else {
                 spaceshipController.AddReward(-1f);
-                spaceshipController.EpisodeInterrupted();
             }
+
+            spaceshipController.EndEpisode();
         }
     }
 }

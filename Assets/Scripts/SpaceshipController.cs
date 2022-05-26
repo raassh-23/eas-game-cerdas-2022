@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.MLAgents;
-using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
+using Unity.MLAgents.Sensors;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -84,14 +84,22 @@ public class SpaceshipController : Agent
 
     public UnityEvent<SpaceshipController> onFinishedRace;
 
-    private bool canShoot {
-        get {
+    private float damageTaken;
+
+    private bool isReset;
+
+    private bool canShoot
+    {
+        get
+        {
             return Time.time > nextShootTime && ammo > 0;
         }
     }
 
-    private bool canDropMine {
-        get {
+    private bool canDropMine
+    {
+        get
+        {
             return Time.time > nextMineTime && mines > 0;
         }
     }
@@ -102,10 +110,13 @@ public class SpaceshipController : Agent
 
         environmentManager = GetComponentInParent<EnvironmentManager>();
 
-        if (environmentManager == null) {
+        if (environmentManager == null)
+        {
             existentialReward = 1f / 20000;
             maxLap = 3;
-        } else {
+        }
+        else
+        {
             existentialReward = 1f / environmentManager.maxStep;
             maxLap = environmentManager.maxLap;
         }
@@ -118,6 +129,7 @@ public class SpaceshipController : Agent
         currentCheckpoint = null;
         nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
         isInTrack = true;
+        isReset = false;
         outOfTrackTimer = 0;
         nextShootTime = 0;
         nextMineTime = 0;
@@ -127,6 +139,7 @@ public class SpaceshipController : Agent
         ammo = initAmmo;
         mines = initMines;
         health = initialHealth;
+        damageTaken = 0;
         transform.position = startPosition.position;
     }
 
@@ -204,12 +217,35 @@ public class SpaceshipController : Agent
                 break;
         }
 
-        AddReward(checkPointSinceLastAward * 0.05f);
-        AddReward(lapSinceLastAward * 0.5f);
+        if (checkPointSinceLastAward > 0)
+        {
+            AddReward(checkPointSinceLastAward * 0.05f);
+            checkPointSinceLastAward = 0;
+        }
+
+        if (lapSinceLastAward > 0)
+        {
+            AddReward(lapSinceLastAward * 0.5f);
+            lapSinceLastAward = 0;
+        }
+
         AddReward(-1 * existentialReward);
 
-        checkPointSinceLastAward = 0;
-        lapSinceLastAward = 0;
+        if (!isInTrack)
+        {
+            AddReward(-1 * existentialReward);
+        }
+
+        if (isReset)
+        {
+            AddReward(-10 * existentialReward);
+            isReset = false;
+        }
+
+        if (damageTaken > 0) {
+            AddReward(-2 * damageTaken * existentialReward);
+            damageTaken = 0;
+        }
     }
 
     public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
@@ -218,7 +254,8 @@ public class SpaceshipController : Agent
         actionMask.SetActionEnabled(1, 1, canDropMine);
     }
 
-    private void MoveShip(float h, float v) {
+    private void MoveShip(float h, float v)
+    {
         Vector2 speed = -1 * transform.up * (v * acceleration);
         rigidbody2d.AddForce(speed);
         transform.Rotate(Vector3.forward, h * rotateSpeed * Time.fixedDeltaTime);
@@ -271,8 +308,8 @@ public class SpaceshipController : Agent
             ammo--;
             BulletController bullet = Instantiate(bulletPrefab, bulletSpawn.position, transform.rotation)
                 .GetComponent<BulletController>();
-            bullet.bulletSpeed = bulletSpeed;
             bullet.bulletRange = bulletRange;
+            bullet.bulletSpeed = bulletSpeed;
         }
     }
 
@@ -291,12 +328,16 @@ public class SpaceshipController : Agent
         if (currentCheckpoint != null)
         {
             transform.position = currentCheckpoint.transform.position;
-        } else {
+        }
+        else
+        {
             transform.position = startPosition.position;
         }
 
         rigidbody2d.velocity = Vector2.zero;
+        health = initialHealth;
         isInTrack = true;
+        isReset = true;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -310,6 +351,7 @@ public class SpaceshipController : Agent
     private void TakeDamage(float damage)
     {
         health -= damage;
+        damageTaken += damage;
         if (health <= 0)
         {
             ResetSpaceship();
@@ -358,7 +400,8 @@ public class SpaceshipController : Agent
             Debug.Log("Checkpoint " + currentCheckpoint.order);
             Debug.Log("Next Checkpoint " + nextCheckpoint.order);
 
-            if (cp.order == 0) {
+            if (cp.order == 0)
+            {
                 currentLap++;
                 lapSinceLastAward++;
 
