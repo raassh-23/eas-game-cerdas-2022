@@ -88,6 +88,9 @@ public class SpaceshipController : Agent
 
     private float damageTaken;
 
+    public int shotHit;
+    public int mineHit;
+
     private bool isReset;
 
     private bool canShoot
@@ -143,6 +146,8 @@ public class SpaceshipController : Agent
         health = initialHealth;
         damageTaken = 0;
         pickedUpPowerup = 0;
+        shotHit = 0;
+        mineHit = 0;
         transform.position = startPosition.position;
     }
 
@@ -224,13 +229,13 @@ public class SpaceshipController : Agent
 
         if (checkPointSinceLastAward > 0)
         {
-            AddReward(checkPointSinceLastAward * 0.05f);
+            AddReward(checkPointSinceLastAward * 0.5f);
             checkPointSinceLastAward = 0;
         }
 
         if (lapSinceLastAward > 0)
         {
-            AddReward(lapSinceLastAward * 0.5f);
+            AddReward(lapSinceLastAward);
             lapSinceLastAward = 0;
         }
 
@@ -257,6 +262,20 @@ public class SpaceshipController : Agent
             AddReward(2 * existentialReward);
             pickedUpPowerup = 0;
         }
+
+        if (shotHit > 0)
+        {
+            AddReward(shotHit * existentialReward);
+            shotHit = 0;
+        }
+
+        if (mineHit > 0)
+        {
+            AddReward(mineHit * 5f * existentialReward);
+            mineHit = 0;
+        }
+
+        Debug.Log("Reward: " + GetCumulativeReward());
     }
 
     public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
@@ -321,6 +340,7 @@ public class SpaceshipController : Agent
                 .GetComponent<BulletController>();
             bullet.bulletRange = bulletRange;
             bullet.bulletSpeed = bulletSpeed;
+            bullet.shooter = this;
         }
     }
 
@@ -330,7 +350,9 @@ public class SpaceshipController : Agent
         {
             nextMineTime = Time.time + mineCooldown;
             mines--;
-            Instantiate(minePrefab, mineSpawn.position, transform.rotation);
+            MineController mine = Instantiate(minePrefab, mineSpawn.position, transform.rotation)
+                .GetComponent<MineController>();
+            mine.dropper = this;
         }
     }
 

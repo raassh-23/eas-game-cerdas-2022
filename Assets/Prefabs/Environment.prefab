@@ -227,9 +227,10 @@ MonoBehaviour:
   - {fileID: 5193602960494469004}
   - {fileID: 321645074534819323}
   - {fileID: 8307843274190159391}
-  maxStep: 20000
-  maxLap: 3
+  maxStep: 10000
+  maxLap: 2
   raceTrackController: {fileID: 5193602960373644707}
+  timer: 0
   isTraining: 1
 --- !u!1 &5193602959904459045
 GameObject:

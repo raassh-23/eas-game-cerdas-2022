@@ -13,7 +13,7 @@ public class EnvironmentManager : MonoBehaviour
     [SerializeField]
     private RaceTrackController raceTrackController;
 
-    private int timer = 0;
+    public int timer = 0;
 
     public bool isTraining = true;
 
