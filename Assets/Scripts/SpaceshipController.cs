@@ -129,7 +129,7 @@ public class SpaceshipController : Agent
     private void init()
     {
         currentCheckpoint = null;
-        nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
+        nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint, environmentManager);
         isInTrack = true;
         isReset = false;
         outOfTrackTimer = 0;
@@ -403,7 +403,7 @@ public class SpaceshipController : Agent
         if (isInRange && cp == nextCheckpoint)
         {
             currentCheckpoint = cp;
-            nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
+            nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint, environmentManager);
             checkPointSinceLastAward++;
 
             Debug.Log("Checkpoint " + currentCheckpoint.order);

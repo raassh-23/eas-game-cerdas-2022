@@ -13,11 +13,21 @@ public class CheckpointController : MonoBehaviour
     [SerializeField]
     private SpaceshipController spaceshipController;
 
+    private EnvironmentManager environmentManager;
+
     static public List<CheckpointController> checkpoints = new List<CheckpointController>();
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        environmentManager = GetComponentInParent<EnvironmentManager>();
+
+        if (environmentManager == null) {
+            Debug.Log("EnvironmentManager not found");
+        } else {
+            Debug.Log("EnvironmentManager found " + environmentManager);
+        }
 
         checkpoints.Add(this);
     }
@@ -30,12 +40,12 @@ public class CheckpointController : MonoBehaviour
         }
     }
 
-    static public CheckpointController getNextCheckpoint(CheckpointController currentCheckpoint) {
+    static public CheckpointController getNextCheckpoint(CheckpointController currentCheckpoint, EnvironmentManager environmentManager) {
         if (currentCheckpoint == null || currentCheckpoint.isLast) {
-            return CheckpointController.checkpoints.Find(cp => cp.order == 0);
+            return CheckpointController.checkpoints.Find(cp => cp.order == 0 && cp.environmentManager == environmentManager);
         }
 
-        return CheckpointController.checkpoints.Find(cp => cp.order == currentCheckpoint.order + 1);
+        return CheckpointController.checkpoints.Find(cp => cp.order == currentCheckpoint.order + 1 && cp.environmentManager == environmentManager);
     }
 
     public Vector2 GetDirection() {
