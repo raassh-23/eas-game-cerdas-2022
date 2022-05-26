@@ -61,6 +61,8 @@ public class SpaceshipController : Agent
 
     public bool isInTrack;
 
+    private int pickedUpPowerup;
+
     [SerializeField]
     private float outOfTrackTime;
 
@@ -140,6 +142,7 @@ public class SpaceshipController : Agent
         mines = initMines;
         health = initialHealth;
         damageTaken = 0;
+        pickedUpPowerup = 0;
         transform.position = startPosition.position;
     }
 
@@ -185,11 +188,13 @@ public class SpaceshipController : Agent
         sensor.AddObservation(health);
         sensor.AddObservation(ammo);
         sensor.AddObservation(mines);
+        sensor.AddObservation(isInTrack);
+        sensor.AddObservation(currentLap);
         sensor.AddObservation(transform.position);
         sensor.AddObservation(transform.rotation);
         sensor.AddObservation(rigidbody2d.velocity);
         sensor.AddObservation(nextCheckpoint.transform.position);
-        sensor.AddObservation(nextCheckpoint.transform.rotation);
+        sensor.AddObservation(nextCheckpoint.GetDirection());
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -246,6 +251,12 @@ public class SpaceshipController : Agent
             AddReward(-2 * damageTaken * existentialReward);
             damageTaken = 0;
         }
+
+        if (pickedUpPowerup > 0)
+        {
+            AddReward(2 * existentialReward);
+            pickedUpPowerup = 0;
+        }
     }
 
     public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
@@ -257,7 +268,7 @@ public class SpaceshipController : Agent
     private void MoveShip(float h, float v)
     {
         Vector2 speed = -1 * transform.up * (v * acceleration);
-        rigidbody2d.AddForce(speed);
+        rigidbody2d.AddForce(v > 0 ? speed : speed * 0.3f);
         transform.Rotate(Vector3.forward, h * rotateSpeed * Time.fixedDeltaTime);
 
         if (rigidbody2d.velocity.magnitude > maxSpeed)
@@ -374,6 +385,8 @@ public class SpaceshipController : Agent
                 health += 5;
                 break;
         }
+
+        pickedUpPowerup++;
     }
 
     private void CheckCheckPoint(GameObject other)
@@ -383,11 +396,7 @@ public class SpaceshipController : Agent
         CheckpointController cp = other.GetComponent<CheckpointController>();
 
         Vector2 dir = rigidbody2d.velocity.normalized;
-        Vector2 cpDir = new Vector2(Mathf.Cos(cp.transform.rotation.eulerAngles.z * Mathf.Deg2Rad),
-            Mathf.Sin(cp.transform.rotation.eulerAngles.z * Mathf.Deg2Rad));
-
-        Debug.Log(dir + " " + cpDir);
-        Debug.Log(Vector2.Dot(dir, cpDir));
+        Vector2 cpDir = cp.GetDirection();
 
         bool isInRange = Vector2.Dot(dir, cpDir) > 0;
 

@@ -37,4 +37,9 @@ public class CheckpointController : MonoBehaviour
 
         return CheckpointController.checkpoints.Find(cp => cp.order == currentCheckpoint.order + 1);
     }
+
+    public Vector2 GetDirection() {
+        return new Vector2(Mathf.Cos(transform.rotation.eulerAngles.z * Mathf.Deg2Rad),
+            Mathf.Sin(transform.rotation.eulerAngles.z * Mathf.Deg2Rad));
+    }
 }
