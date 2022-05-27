@@ -198,7 +198,7 @@ public class SpaceshipController : Agent
         sensor.AddObservation(transform.position);
         sensor.AddObservation(transform.rotation);
         sensor.AddObservation(rigidbody2d.velocity);
-        sensor.AddObservation(nextCheckpoint.transform.position);
+        sensor.AddObservation(nextCheckpoint.transform.position - transform.position);
         sensor.AddObservation(nextCheckpoint.GetDirection());
     }
 
@@ -243,7 +243,7 @@ public class SpaceshipController : Agent
 
         if (!isInTrack)
         {
-            AddReward(-1 * existentialReward);
+            AddReward(-3 * existentialReward);
         }
 
         if (isReset)
@@ -259,19 +259,19 @@ public class SpaceshipController : Agent
 
         if (pickedUpPowerup > 0)
         {
-            AddReward(2 * existentialReward);
+            AddReward(5 * existentialReward);
             pickedUpPowerup = 0;
         }
 
         if (shotHit > 0)
         {
-            AddReward(shotHit * existentialReward);
+            AddReward(3 * shotHit * existentialReward);
             shotHit = 0;
         }
 
         if (mineHit > 0)
         {
-            AddReward(mineHit * 5f * existentialReward);
+            AddReward(10 * mineHit * existentialReward);
             mineHit = 0;
         }
 
