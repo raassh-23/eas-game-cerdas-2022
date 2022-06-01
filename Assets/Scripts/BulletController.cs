@@ -19,6 +19,7 @@ public class BulletController : MonoBehaviour
         transform.Translate(-1*Vector2.up * dist);
         curDistance += dist;
         if (curDistance > bulletRange) {
+            shooter.shotMissed++;
             Destroy(gameObject);
         }
     }

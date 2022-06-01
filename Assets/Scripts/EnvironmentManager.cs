@@ -29,7 +29,6 @@ public class EnvironmentManager : MonoBehaviour
                 }
             });
         }
-        Debug.Log("EnvironmentManager Start");
     }
 
     private void FixedUpdate() {
@@ -54,11 +53,11 @@ public class EnvironmentManager : MonoBehaviour
         foreach (SpaceshipController spaceshipController in spaceshipControllers) {
             if (spaceshipController == winner) {
                 spaceshipController.AddReward(1f);
+                spaceshipController.EndEpisode();
             } else {
                 spaceshipController.AddReward(-1f);
+                spaceshipController.EpisodeInterrupted();
             }
-
-            spaceshipController.EndEpisode();
         }
     }
 }

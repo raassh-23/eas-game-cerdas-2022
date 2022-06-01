@@ -78,8 +78,10 @@ public class SpaceshipController : Agent
     [SerializeField]
     private Transform startPosition;
 
-    private int checkPointSinceLastAward;
-    private int lapSinceLastAward;
+    private int checkPointSinceLastReward;
+    private float checkPointReward;
+    private int lapSinceLastReward;
+    private float lapReward;
 
     private EnvironmentManager environmentManager;
     private float existentialReward;
@@ -90,6 +92,9 @@ public class SpaceshipController : Agent
 
     public int shotHit;
     public int mineHit;
+
+    public int shotMissed;
+    public int mineMissed;
 
     private bool isReset;
 
@@ -124,6 +129,8 @@ public class SpaceshipController : Agent
         {
             existentialReward = 1f / environmentManager.maxStep;
             maxLap = environmentManager.maxLap;
+            checkPointReward = 2f / (CheckpointController.checkpoints.Count * maxLap);
+            lapReward = 2f / maxLap;
         }
 
         init();
@@ -139,8 +146,8 @@ public class SpaceshipController : Agent
         nextShootTime = 0;
         nextMineTime = 0;
         currentLap = -1;
-        checkPointSinceLastAward = 0;
-        lapSinceLastAward = 0;
+        checkPointSinceLastReward = 0;
+        lapSinceLastReward = 0;
         ammo = initAmmo;
         mines = initMines;
         health = initialHealth;
@@ -227,55 +234,66 @@ public class SpaceshipController : Agent
                 break;
         }
 
-        if (checkPointSinceLastAward > 0)
-        {
-            AddReward(checkPointSinceLastAward * 0.5f);
-            checkPointSinceLastAward = 0;
-        }
-
-        if (lapSinceLastAward > 0)
-        {
-            AddReward(lapSinceLastAward);
-            lapSinceLastAward = 0;
-        }
-
         AddReward(-1 * existentialReward);
+
+        if (checkPointSinceLastReward > 0)
+        {
+            AddReward(checkPointSinceLastReward * checkPointReward);
+            checkPointSinceLastReward = 0;
+        }
+
+        if (lapSinceLastReward > 0)
+        {
+            AddReward(lapSinceLastReward * lapReward);
+            lapSinceLastReward = 0;
+        }
 
         if (!isInTrack)
         {
-            AddReward(-3 * existentialReward);
+            AddReward(-4 * existentialReward);
         }
 
         if (isReset)
         {
-            AddReward(-10 * existentialReward);
+            AddReward(-20 * existentialReward);
             isReset = false;
         }
 
-        if (damageTaken > 0) {
-            AddReward(-2 * damageTaken * existentialReward);
+        if (damageTaken > 0)
+        {
+            AddReward(-6 * damageTaken * existentialReward);
             damageTaken = 0;
         }
 
         if (pickedUpPowerup > 0)
         {
-            AddReward(5 * existentialReward);
+            AddReward(6 * existentialReward);
             pickedUpPowerup = 0;
         }
 
         if (shotHit > 0)
         {
-            AddReward(3 * shotHit * existentialReward);
+            AddReward(4 * shotHit * existentialReward);
             shotHit = 0;
         }
 
         if (mineHit > 0)
         {
-            AddReward(10 * mineHit * existentialReward);
+            AddReward(20 * mineHit * existentialReward);
             mineHit = 0;
         }
 
-        Debug.Log("Reward: " + GetCumulativeReward());
+        if (shotMissed > 0)
+        {
+            AddReward(-2 * shotMissed * existentialReward);
+            shotMissed = 0;
+        }
+
+        if (mineMissed > 0)
+        {
+            AddReward(-10 * mineMissed * existentialReward);
+            mineMissed = 0;
+        }
     }
 
     public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
@@ -361,10 +379,12 @@ public class SpaceshipController : Agent
         if (currentCheckpoint != null)
         {
             transform.position = currentCheckpoint.transform.position;
+            transform.rotation = Quaternion.Euler(0, 0, currentCheckpoint.transform.rotation.eulerAngles.z + 90);
         }
         else
         {
             transform.position = startPosition.position;
+            transform.rotation = startPosition.rotation;
         }
 
         rigidbody2d.velocity = Vector2.zero;
@@ -426,7 +446,7 @@ public class SpaceshipController : Agent
         {
             currentCheckpoint = cp;
             nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint, environmentManager);
-            checkPointSinceLastAward++;
+            checkPointSinceLastReward++;
 
             Debug.Log("Checkpoint " + currentCheckpoint.order);
             Debug.Log("Next Checkpoint " + nextCheckpoint.order);
@@ -434,7 +454,7 @@ public class SpaceshipController : Agent
             if (cp.order == 0)
             {
                 currentLap++;
-                lapSinceLastAward++;
+                lapSinceLastReward++;
 
                 if (currentLap >= maxLap)
                 {
