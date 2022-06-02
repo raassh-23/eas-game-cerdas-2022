@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class LineController : MonoBehaviour
 {
+    [SerializeField]
     private LineRenderer lineRenderer;
     private Transform[] points;
 
     public bool isLooping;
-
-    private void Awake()
-    {
-        lineRenderer = GetComponent<LineRenderer>();
-    }
 
     private void Update()
     {

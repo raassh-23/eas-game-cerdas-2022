@@ -38,6 +38,8 @@ public class RaceTrackCollision : MonoBehaviour
 
         if (positions1.Length != positions2.Length)
         {
+            Debug.Log(positions1.Length);
+            Debug.Log(positions2.Length);
             Debug.LogError("RaceTrackCollision: The number of points in the two lines is not equal");
             return;
         }

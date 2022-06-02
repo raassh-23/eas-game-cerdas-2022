@@ -86,6 +86,7 @@ public class RaceTrackController : MonoBehaviour
             outerPoints.Add(newPoint.transform);
         }
         outer.InitPoints(outerPoints);
+        Debug.Log("outer: " + outerPoints.Count);
 
         CheckpointController.checkpoints = new List<CheckpointController>();
         foreach (Transform child in checkpoints) {
