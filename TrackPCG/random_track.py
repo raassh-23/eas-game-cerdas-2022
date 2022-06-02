@@ -44,19 +44,19 @@ def add_rand_points(inp_point, diff = 1, max_disp = 2):
 
     return rSet 
 
-def fixAngle(inp_point, max_angle = 90): 
+def fix_angle(inp_point, max_angle = 90): 
     for i, point in enumerate(inp_point):
-        prev = inp_point[i-1 if i > 0 else (len(inp_point) - 1)]
-        next = inp_point[(i+1) % len(inp_point)]
+        prev_point = inp_point[i-1 if i > 0 else (len(inp_point) - 1)]
+        next_point = inp_point[(i+1) % len(inp_point)]
 
-        px = point[0] - prev[0]
-        py = point[1] - prev[1]
+        px = point[0] - prev_point[0]
+        py = point[1] - prev_point[1]
         pl = math.sqrt(px*px + py*py)
         px /= pl
         py /= pl
 
-        nx = next[0] - point[0]
-        ny = next[1] - point[1]
+        nx = next_point[0] - point[0]
+        ny = next_point[1] - point[1]
         nl = math.sqrt(nx*nx + ny*ny)
         nx /= nl
         ny /= nl
@@ -75,8 +75,8 @@ def fixAngle(inp_point, max_angle = 90):
         newX *= nl
         newY *= nl
 
-        next[0] = point[0] + newX
-        next[1] = point[1] + newX
+        next_point[0] = point[0] + newX
+        next_point[1] = point[1] + newX
 
 def scale(inp_point, min_scale = 0.9, max_scale = None):
     if max_scale == None:
@@ -136,7 +136,7 @@ def save_to_json(outer, inner, checkpoints, checkpoints_angle, checkpoints_lengt
         "starts": list_starts
     }
 
-    filename = "track_" + str(time.time()) + ".json"
+    filename = "track_" + str(int(time.time())) + ".json"
     print("Saving to " + filename)
 
     with open(filename, "w") as f:
@@ -152,9 +152,9 @@ if __name__ == "__main__":
         hull_points = np.array([points[i] for i in hull.vertices])
 
         for i in range(3):
-            push_apart(hull_points, 5)
+            push_apart(hull_points, np.random.uniform(2.5, 5))
 
-        outer_hull = add_rand_points(hull_points, 1, 5)
+        outer_hull = add_rand_points(hull_points, 1, np.random.uniform(2.5, 5))
 
         # for i in range(3):
         #     push_apart(outer_hull, 5)
@@ -177,13 +177,16 @@ if __name__ == "__main__":
             angle = math.degrees(math.atan2(normal[1], normal[0]))
             checkpoints_angle[i] = (angle + 360 + 180) % 360
 
+        checkpoints = checkpoints[::-1]
+        checkpoints_angle = checkpoints_angle[::-1]
+        checkpoints_length = checkpoints_length[::-1]
+
         starts_points = np.zeros((3, 2))
-        rand_index = rng.integers(0, lastIndex)
-        next_index = (rand_index + 1) % len(outer_hull)
-        starts_angle = math.degrees(math.atan2(outer_hull[next_index][1] - outer_hull[rand_index][1], outer_hull[next_index][0] - outer_hull[rand_index][0]))
-        starts_angle = (starts_angle + 360 - 90) % 360
-        outer_point = (outer_hull[rand_index] + outer_hull[next_index]) / 2
-        inner_point = (inner_hull[rand_index] + inner_hull[next_index]) / 2
+        start_index = 0
+        starts_angle = math.degrees(math.atan2(outer_hull[lastIndex][1] - outer_hull[start_index][1], outer_hull[lastIndex][0] - outer_hull[start_index][0]))
+        starts_angle = (starts_angle + 360 + 90) % 360
+        outer_point = (outer_hull[start_index] + outer_hull[lastIndex]) / 2
+        inner_point = (inner_hull[start_index] + inner_hull[lastIndex]) / 2
 
         for i in range(3):
             starts_points[i] = inner_point + (outer_point - inner_point) * (i + 1) / 4

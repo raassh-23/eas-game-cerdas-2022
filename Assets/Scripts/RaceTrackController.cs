@@ -69,7 +69,6 @@ public class RaceTrackController : MonoBehaviour
     public void SetupTrack(string trackName) {
         var track = TrackJsonReader.LoadTrack(trackName);
 
-        Debug.Log(inner.points.Count);
         inner.RemoveAllPoints();
         var innerPoints = new List<Transform>();
         for (int i = 0; i < track.inner.Count; i++) {
@@ -78,7 +77,6 @@ public class RaceTrackController : MonoBehaviour
             innerPoints.Add(newPoint.transform);
         }
         inner.InitPoints(innerPoints);
-        Debug.Log(inner.points.Count);
 
         outer.RemoveAllPoints();
         var outerPoints = new List<Transform>();

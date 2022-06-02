@@ -223,11 +223,17 @@ MonoBehaviour:
   - {fileID: 5193602960494469004}
   - {fileID: 321645074534819323}
   - {fileID: 8307843274190159391}
-  maxStep: 10000
-  maxLap: 2
+  maxStep: 20000
+  maxLap: 3
   raceTrackController: {fileID: 5193602960373644707}
   timer: 0
   isTraining: 1
+  trackNames:
+  - track_1
+  - track_2
+  - track_3
+  - track_4
+  - track_5
 --- !u!1 &5193602959904459045
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,6 +277,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba6c5c3e6907036458aa015ca207c42e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  points: []
   lineController: {fileID: 5193602961875687695}
 --- !u!1 &5193602960373644383
 GameObject:
@@ -431,6 +438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba6c5c3e6907036458aa015ca207c42e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  points: []
   lineController: {fileID: 5193602961700135624}
 --- !u!1 &5193602960504894867
 GameObject:

@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.MLAgents;
 using UnityEngine;
 
 public class EnvironmentManager : MonoBehaviour
@@ -13,9 +10,12 @@ public class EnvironmentManager : MonoBehaviour
     [SerializeField]
     private RaceTrackController raceTrackController;
 
-    public int timer = 0;
+    private int timer = 0;
 
     public bool isTraining = true;
+
+    [SerializeField]
+    private string[] trackNames;
 
     private void Awake()
     {
@@ -44,7 +44,8 @@ public class EnvironmentManager : MonoBehaviour
     }
 
     private void SetTrack() {
-        raceTrackController.SetupTrack("track_1");
+        string trackName = trackNames[Random.Range(0, trackNames.Length)];
+        raceTrackController.SetupTrack(trackName);
         raceTrackController.ResetObjects();
     }
 

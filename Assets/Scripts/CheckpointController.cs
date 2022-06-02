@@ -19,12 +19,6 @@ public class CheckpointController : MonoBehaviour
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        environmentManager = GetComponentInParent<EnvironmentManager>();
-
-        if (environmentManager == null) {
-            Debug.Log("EnvironmentManager not found");
-        }
     }
 
     public void AddSelf() {
@@ -39,12 +33,12 @@ public class CheckpointController : MonoBehaviour
         }
     }
 
-    static public CheckpointController getNextCheckpoint(CheckpointController currentCheckpoint, EnvironmentManager environmentManager) {
+    static public CheckpointController getNextCheckpoint(CheckpointController currentCheckpoint) {
         if (currentCheckpoint == null || currentCheckpoint.isLast) {
-            return CheckpointController.checkpoints.Find(cp => cp.order == 0 && cp.environmentManager == environmentManager);
+            return CheckpointController.checkpoints.Find(cp => cp.order == 0);
         }
 
-        return CheckpointController.checkpoints.Find(cp => cp.order == currentCheckpoint.order + 1 && cp.environmentManager == environmentManager);
+        return CheckpointController.checkpoints.Find(cp => cp.order == currentCheckpoint.order + 1);
     }
 
     public Vector2 GetDirection() {

@@ -510,6 +510,30 @@ PrefabInstance:
       propertyPath: maxStep
       value: 20000
       objectReference: {fileID: 0}
+    - target: {fileID: 7701451219421614313, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: trackNames.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7701451219421614313, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: trackNames.Array.data[0]
+      value: track_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7701451219421614313, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: trackNames.Array.data[1]
+      value: track_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7701451219421614313, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: trackNames.Array.data[2]
+      value: track_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7701451219421614313, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: trackNames.Array.data[3]
+      value: track_4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7701451219421614313, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
+      propertyPath: trackNames.Array.data[4]
+      value: track_5
+      objectReference: {fileID: 0}
     - target: {fileID: 8307843274190159390, guid: c46822d6bcceb1147b02c39874be19d9, type: 3}
       propertyPath: m_RootOrder
       value: 3

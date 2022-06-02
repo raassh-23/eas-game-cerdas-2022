@@ -137,8 +137,6 @@ public class SpaceshipController : Agent
 
     private void init()
     {
-        currentCheckpoint = null;
-        nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint, environmentManager);
         isInTrack = true;
         isReset = false;
         outOfTrackTimer = 0;
@@ -156,6 +154,9 @@ public class SpaceshipController : Agent
         mineHit = 0;
         transform.rotation = startPosition.rotation;
         transform.position = startPosition.position;
+        rigidbody2d.velocity = Vector2.zero;
+        currentCheckpoint = null;
+        nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
     }
 
     private void Update()
@@ -201,7 +202,7 @@ public class SpaceshipController : Agent
         sensor.AddObservation(ammo);
         sensor.AddObservation(mines);
         sensor.AddObservation(isInTrack);
-        sensor.AddObservation(currentLap);
+        sensor.AddObservation(maxLap - currentLap);
         sensor.AddObservation(transform.position);
         sensor.AddObservation(transform.rotation);
         sensor.AddObservation(rigidbody2d.velocity);
@@ -453,7 +454,7 @@ public class SpaceshipController : Agent
         if (isInRange && cp == nextCheckpoint)
         {
             currentCheckpoint = cp;
-            nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint, environmentManager);
+            nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
             checkPointSinceLastReward++;
 
             Debug.Log("Checkpoint " + currentCheckpoint.order);
