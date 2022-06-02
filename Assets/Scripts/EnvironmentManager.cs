@@ -17,7 +17,7 @@ public class EnvironmentManager : MonoBehaviour
 
     public bool isTraining = true;
 
-    private void Start()
+    private void Awake()
     {
         foreach (var spaceshipController in spaceshipControllers)
         {
@@ -29,6 +29,8 @@ public class EnvironmentManager : MonoBehaviour
                 }
             });
         }
+
+        SetTrack();
     }
 
     private void FixedUpdate() {
@@ -41,6 +43,11 @@ public class EnvironmentManager : MonoBehaviour
         }
     }
 
+    private void SetTrack() {
+        raceTrackController.SetupTrack("track_1");
+        raceTrackController.ResetObjects();
+    }
+
     private void endEpisodeForAll(SpaceshipController winner = null) {
         if (winner == null) {
             Debug.Log("End episode, timer reached max step");
@@ -48,7 +55,7 @@ public class EnvironmentManager : MonoBehaviour
             Debug.Log("End episode, " + winner.name + " won");
         }
 
-        raceTrackController.ResetObjects();
+        SetTrack();
 
         foreach (SpaceshipController spaceshipController in spaceshipControllers) {
             if (spaceshipController == winner) {

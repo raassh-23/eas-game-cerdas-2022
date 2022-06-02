@@ -74,9 +74,8 @@ public class SpaceshipController : Agent
 
     public int currentLap;
     private int maxLap;
-
-    [SerializeField]
-    private Transform startPosition;
+    
+    public Transform startPosition;
 
     private int checkPointSinceLastReward;
     private float checkPointReward;
@@ -155,6 +154,7 @@ public class SpaceshipController : Agent
         pickedUpPowerup = 0;
         shotHit = 0;
         mineHit = 0;
+        transform.rotation = startPosition.rotation;
         transform.position = startPosition.position;
     }
 

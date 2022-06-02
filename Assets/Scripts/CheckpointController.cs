@@ -10,14 +10,13 @@ public class CheckpointController : MonoBehaviour
 
     public bool isLast;
 
-    [SerializeField]
-    private SpaceshipController spaceshipController;
+    public SpaceshipController spaceshipController;
 
     private EnvironmentManager environmentManager;
 
     static public List<CheckpointController> checkpoints = new List<CheckpointController>();
 
-    private void Awake()
+    private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -25,10 +24,10 @@ public class CheckpointController : MonoBehaviour
 
         if (environmentManager == null) {
             Debug.Log("EnvironmentManager not found");
-        } else {
-            Debug.Log("EnvironmentManager found " + environmentManager);
         }
+    }
 
+    public void AddSelf() {
         checkpoints.Add(this);
     }
 

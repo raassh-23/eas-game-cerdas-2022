@@ -30,6 +30,27 @@ public class RaceTrackController : MonoBehaviour
 
     private bool hasSpawnedObjects;
 
+    [SerializeField]
+    private RaceTrackBorderController inner;
+
+    [SerializeField]
+    private RaceTrackBorderController outer;
+
+    [SerializeField]
+    private GameObject point;
+
+    [SerializeField]
+    private GameObject checkpoint;
+
+    [SerializeField]
+    private Transform checkpoints;
+
+    [SerializeField]
+    private Transform[] startPoints;
+
+    [SerializeField]
+    private SpaceshipController mainPlayer;
+
     private void Start() {
         polygonCollider2D = GetComponent<PolygonCollider2D>();
 
@@ -43,6 +64,45 @@ public class RaceTrackController : MonoBehaviour
                 StartCoroutine(SpawnPowerUps());
             }
         });
+    }
+
+    public void SetupTrack(string trackName) {
+        var track = TrackJsonReader.LoadTrack(trackName);
+
+        for (int i = 0; i < track.inner.Count; i++) {
+            var newPoint = Instantiate(point, inner.transform);
+            newPoint.transform.position = track.inner[i];
+        }
+        inner.InitPoints();
+
+        for (int i = 0; i < track.outer.Count; i++) {
+            var newPoint = Instantiate(point, outer.transform);
+            newPoint.transform.position = track.outer[i];
+        }
+        outer.InitPoints();
+
+        CheckpointController.checkpoints = new List<CheckpointController>();
+        for (int i = 0; i < track.checkpoints.Count; i++) {
+            var newCheckpoint = Instantiate(checkpoint, checkpoints).GetComponent<CheckpointController>();
+            var cpData = track.checkpoints[i];
+            newCheckpoint.transform.position = cpData.point;
+            newCheckpoint.transform.rotation = Quaternion.Euler(0, 0, cpData.angle);
+            newCheckpoint.transform.localScale = new Vector3(newCheckpoint.transform.localScale.x, cpData.length, 1);
+            newCheckpoint.order = cpData.order;
+            newCheckpoint.spaceshipController = mainPlayer;
+            newCheckpoint.AddSelf();
+
+            if (i == track.checkpoints.Count - 1) {
+                newCheckpoint.isLast = true;
+            } else {
+                newCheckpoint.isLast = false;
+            }
+        }
+
+        for (int i = 0; i < track.starts.Count; i++) {
+            startPoints[i].position = track.starts[i].point;
+            startPoints[i].rotation = Quaternion.Euler(0, 0, track.starts[i].angle);
+        }
     }
 
     public void ResetObjects() {

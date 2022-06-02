@@ -8,7 +8,7 @@ public class RaceTrackBorderController : MonoBehaviour
 
     public LineController lineController;
 
-    private void Start() {
+    public void InitPoints() {
         points = new List<Transform>();
         foreach (Transform child in transform) {
             points.Add(child);
