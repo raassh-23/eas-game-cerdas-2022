@@ -69,19 +69,31 @@ public class RaceTrackController : MonoBehaviour
     public void SetupTrack(string trackName) {
         var track = TrackJsonReader.LoadTrack(trackName);
 
+        Debug.Log(inner.points.Count);
+        inner.RemoveAllPoints();
+        var innerPoints = new List<Transform>();
         for (int i = 0; i < track.inner.Count; i++) {
             var newPoint = Instantiate(point, inner.transform);
             newPoint.transform.position = track.inner[i];
+            innerPoints.Add(newPoint.transform);
         }
-        inner.InitPoints();
+        inner.InitPoints(innerPoints);
+        Debug.Log(inner.points.Count);
 
+        outer.RemoveAllPoints();
+        var outerPoints = new List<Transform>();
         for (int i = 0; i < track.outer.Count; i++) {
             var newPoint = Instantiate(point, outer.transform);
             newPoint.transform.position = track.outer[i];
+            outerPoints.Add(newPoint.transform);
         }
-        outer.InitPoints();
+        outer.InitPoints(outerPoints);
 
         CheckpointController.checkpoints = new List<CheckpointController>();
+        foreach (Transform child in checkpoints) {
+            Destroy(child.gameObject);
+        }
+
         for (int i = 0; i < track.checkpoints.Count; i++) {
             var newCheckpoint = Instantiate(checkpoint, checkpoints).GetComponent<CheckpointController>();
             var cpData = track.checkpoints[i];

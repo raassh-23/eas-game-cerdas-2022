@@ -16,10 +16,15 @@ public class LineController : MonoBehaviour
 
     private void Update()
     {
-        for (int i = 0; i < points.Length; i++)
+        for (int i = 0; i < lineRenderer.positionCount; i++)
         {
             lineRenderer.SetPosition(i, new Vector3(points[i].position.x, points[i].position.y, 0));
         }
+    }
+
+    public void ResetLine() {
+        lineRenderer.positionCount = 0;
+        points = new Transform[]{};
     }
 
     public void SetUpLine(Transform[] points)

@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class RaceTrackBorderController : MonoBehaviour
 {
-    private List<Transform> points;
+    public List<Transform> points;
 
     public LineController lineController;
 
-    public void InitPoints() {
-        points = new List<Transform>();
+    public void RemoveAllPoints() {
         foreach (Transform child in transform) {
-            points.Add(child);
+            Destroy(child.gameObject);
         }
+
+        lineController.ResetLine();
+    }
+
+    public void InitPoints(List<Transform> points) {
+        this.points = points;
 
         lineController.SetUpLine(points.ToArray());
     }

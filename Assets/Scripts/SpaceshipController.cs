@@ -205,8 +205,16 @@ public class SpaceshipController : Agent
         sensor.AddObservation(transform.position);
         sensor.AddObservation(transform.rotation);
         sensor.AddObservation(rigidbody2d.velocity);
-        sensor.AddObservation(nextCheckpoint.transform.position - transform.position);
-        sensor.AddObservation(nextCheckpoint.GetDirection());
+        if (nextCheckpoint != null)
+        {
+            sensor.AddObservation(nextCheckpoint.transform.position - transform.position);
+            sensor.AddObservation(nextCheckpoint.GetDirection());
+        }
+        else
+        {
+            sensor.AddObservation(Vector3.zero);
+            sensor.AddObservation(Vector2.zero);
+        }
     }
 
     public override void OnActionReceived(ActionBuffers actions)
