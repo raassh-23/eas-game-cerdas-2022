@@ -32,7 +32,6 @@ public class RaceTrackCollision : MonoBehaviour
 
     private void LateUpdate()
     {
-        //Get all the positions from the line renderer
         Vector3[] positions1 = raceTrackBorderControllers[0].lineController.GetPositions();
         Vector3[] positions2 = raceTrackBorderControllers[1].lineController.GetPositions();
 

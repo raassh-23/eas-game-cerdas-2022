@@ -86,7 +86,6 @@ public class RaceTrackController : MonoBehaviour
             outerPoints.Add(newPoint.transform);
         }
         outer.InitPoints(outerPoints);
-        Debug.Log("outer: " + outerPoints.Count);
 
         CheckpointController.checkpoints = new List<CheckpointController>();
         foreach (Transform child in checkpoints) {
@@ -102,6 +101,9 @@ public class RaceTrackController : MonoBehaviour
             newCheckpoint.order = cpData.order;
             newCheckpoint.spaceshipController = mainPlayer;
             newCheckpoint.AddSelf();
+
+            // enable this for model 7 up
+            // newCheckpoint.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
 
             if (i == track.checkpoints.Count - 1) {
                 newCheckpoint.isLast = true;
