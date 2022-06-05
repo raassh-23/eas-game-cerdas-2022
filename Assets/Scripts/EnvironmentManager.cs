@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class EnvironmentManager : MonoBehaviour
@@ -33,6 +34,10 @@ public class EnvironmentManager : MonoBehaviour
         SetTrack();
     }
 
+    private void Update() {
+        SetPosition();
+    }
+
     private void FixedUpdate() {
         if (isTraining) {
             timer++;
@@ -61,11 +66,29 @@ public class EnvironmentManager : MonoBehaviour
         foreach (SpaceshipController spaceshipController in spaceshipControllers) {
             if (spaceshipController == winner) {
                 spaceshipController.AddReward(1f);
-                spaceshipController.EndEpisode();
             } else {
-                spaceshipController.AddReward(-1f);
-                spaceshipController.EpisodeInterrupted();
+                spaceshipController.AddReward(-1*((spaceshipController.currentPosition - 1)/2f));
             }
+
+            spaceshipController.EndEpisode();
+        }
+    }
+
+    private void SetPosition() {
+        var positions = spaceshipControllers.ToList();
+
+        positions.Sort((a, b) => {
+            if (a.currentLap != b.currentLap) {
+                return a.currentLap.CompareTo(b.currentLap);
+            } else if (a.nextCheckpoint.order != b.nextCheckpoint.order) {
+                return a.nextCheckpoint.order.CompareTo(b.nextCheckpoint.order);
+            } else {
+                return b.GetDistanceToNextCheckpoint().CompareTo(a.GetDistanceToNextCheckpoint());
+            }
+        });
+        
+        for (int i = 0; i < positions.Count; i++) {
+            positions[i].currentPosition = positions.Count - i;
         }
     }
 }

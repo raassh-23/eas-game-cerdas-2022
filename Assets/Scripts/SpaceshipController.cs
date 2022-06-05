@@ -97,6 +97,12 @@ public class SpaceshipController : Agent
 
     private bool isReset;
 
+    private bool isCollidingTrackBorder;
+
+    private bool isCollidingMeteor;
+
+    public int currentPosition;
+
     private bool canShoot
     {
         get
@@ -152,11 +158,13 @@ public class SpaceshipController : Agent
         pickedUpPowerup = 0;
         shotHit = 0;
         mineHit = 0;
+        currentPosition = 0;
         transform.rotation = startPosition.rotation;
         transform.position = startPosition.position;
         rigidbody2d.velocity = Vector2.zero;
         currentCheckpoint = null;
         nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
+        isCollidingTrackBorder = false;
     }
 
     private void Update()
@@ -202,13 +210,16 @@ public class SpaceshipController : Agent
         sensor.AddObservation(ammo);
         sensor.AddObservation(mines);
         sensor.AddObservation(isInTrack);
+        sensor.AddObservation(transform.rotation.eulerAngles.z);
+        sensor.AddObservation(isCollidingTrackBorder);
+        sensor.AddObservation(isCollidingMeteor);
         sensor.AddObservation(maxLap - currentLap);
-        sensor.AddObservation(transform.position);
-        sensor.AddObservation(transform.rotation);
         sensor.AddObservation(rigidbody2d.velocity);
+        sensor.AddObservation(currentPosition);
+        sensor.AddObservation(GetDistanceToNextCheckpoint());
         if (nextCheckpoint != null)
         {
-            sensor.AddObservation(nextCheckpoint.transform.position - transform.position);
+            sensor.AddObservation(Vector3.Normalize(nextCheckpoint.transform.position - transform.position));
             sensor.AddObservation(nextCheckpoint.GetDirection());
         }
         else
@@ -255,6 +266,15 @@ public class SpaceshipController : Agent
         {
             AddReward(lapSinceLastReward * lapReward);
             lapSinceLastReward = 0;
+        }
+
+        if (isCollidingTrackBorder) {
+            AddReward(-2 * existentialReward);
+        }
+
+        if (isCollidingMeteor)
+        {
+            AddReward(-2 * existentialReward);
         }
 
         if (!isInTrack)
@@ -345,6 +365,12 @@ public class SpaceshipController : Agent
         if (other.gameObject.CompareTag("RaceTrack"))
         {
             isInTrack = true;
+        } 
+        
+        if (other.gameObject.CompareTag("RaceTrackBorder") 
+            || other.gameObject.CompareTag("InnerRaceTrackBorder"))
+        {
+            isCollidingTrackBorder = true;
         }
     }
 
@@ -354,6 +380,12 @@ public class SpaceshipController : Agent
         {
             isInTrack = false;
             outOfTrackTimer = 0;
+        }
+
+        if (other.gameObject.CompareTag("RaceTrackBorder") 
+            || other.gameObject.CompareTag("InnerRaceTrackBorder"))
+        {
+            isCollidingTrackBorder = false;
         }
     }
 
@@ -407,6 +439,20 @@ public class SpaceshipController : Agent
         if (other.gameObject.CompareTag("Bullet") || other.gameObject.CompareTag("Meteor"))
         {
             TakeDamage(1);
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D other) {
+        if (other.gameObject.CompareTag("Meteor"))
+        {
+            isCollidingMeteor = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other) {
+        if (other.gameObject.CompareTag("Meteor"))
+        {
+            isCollidingMeteor = false;
         }
     }
 
@@ -472,6 +518,18 @@ public class SpaceshipController : Agent
                     return;
                 }
             }
+        }
+    }
+
+    public float GetDistanceToNextCheckpoint()
+    {
+        if (nextCheckpoint != null)
+        {
+            return Vector2.Distance(transform.position, nextCheckpoint.transform.position);
+        }
+        else
+        {
+            return -1;
         }
     }
 }

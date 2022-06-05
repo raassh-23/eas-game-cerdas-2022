@@ -226,7 +226,6 @@ MonoBehaviour:
   maxStep: 20000
   maxLap: 3
   raceTrackController: {fileID: 5193602960373644707}
-  timer: 0
   isTraining: 1
   trackNames:
   - track_1
@@ -545,7 +544,7 @@ GameObject:
   - component: {fileID: 5193602961700135626}
   m_Layer: 0
   m_Name: RaceTrackBorderRenderer2
-  m_TagString: RaceTrackBorder
+  m_TagString: InnerRaceTrackBorder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -576,6 +575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15329493604081d4899efe7fc1e38c17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lineRenderer: {fileID: 0}
   isLooping: 0
 --- !u!120 &5193602961700135625
 LineRenderer:
@@ -761,6 +761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15329493604081d4899efe7fc1e38c17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lineRenderer: {fileID: 0}
   isLooping: 0
 --- !u!120 &5193602961875687692
 LineRenderer:

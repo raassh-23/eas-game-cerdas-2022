@@ -5,7 +5,7 @@ using UnityEngine;
 public class MineController : MonoBehaviour
 {
     public SpaceshipController dropper;
-    public float mineDuration = 30;
+    public float mineDuration = 60;
 
     private float curDuration;
 

@@ -12,6 +12,7 @@ TagManager:
   - Meteor
   - Mine
   - PowerUp
+  - InnerRaceTrackBorder
   layers:
   - Default
   - TransparentFX
