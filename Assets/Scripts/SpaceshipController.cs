@@ -209,7 +209,7 @@ public class SpaceshipController : Agent
         sensor.AddObservation(health);
         sensor.AddObservation(ammo);
         sensor.AddObservation(mines);
-        sensor.AddObservation(isInTrack);
+        // sensor.AddObservation(isInTrack);
         sensor.AddObservation(transform.rotation.eulerAngles.z);
         sensor.AddObservation(isCollidingTrackBorder);
         sensor.AddObservation(isCollidingMeteor);
@@ -269,12 +269,12 @@ public class SpaceshipController : Agent
         }
 
         if (isCollidingTrackBorder) {
-            AddReward(-2 * existentialReward);
+            AddReward(-4 * existentialReward);
         }
 
         if (isCollidingMeteor)
         {
-            AddReward(-2 * existentialReward);
+            AddReward(-4 * existentialReward);
         }
 
         if (!isInTrack)
@@ -334,7 +334,7 @@ public class SpaceshipController : Agent
     private void MoveShip(float h, float v)
     {
         Vector2 speed = -1 * transform.up * (v * acceleration);
-        rigidbody2d.AddForce(v > 0 ? speed : speed * 0.3f);
+        rigidbody2d.AddForce(v > 0 ? speed : speed * 0.5f);
         transform.Rotate(Vector3.forward, h * rotateSpeed * Time.fixedDeltaTime);
 
         if (rigidbody2d.velocity.magnitude > maxSpeed)
@@ -366,12 +366,6 @@ public class SpaceshipController : Agent
         {
             isInTrack = true;
         } 
-        
-        if (other.gameObject.CompareTag("RaceTrackBorder") 
-            || other.gameObject.CompareTag("InnerRaceTrackBorder"))
-        {
-            isCollidingTrackBorder = true;
-        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -380,12 +374,6 @@ public class SpaceshipController : Agent
         {
             isInTrack = false;
             outOfTrackTimer = 0;
-        }
-
-        if (other.gameObject.CompareTag("RaceTrackBorder") 
-            || other.gameObject.CompareTag("InnerRaceTrackBorder"))
-        {
-            isCollidingTrackBorder = false;
         }
     }
 
@@ -447,12 +435,22 @@ public class SpaceshipController : Agent
         {
             isCollidingMeteor = true;
         }
+
+        if (other.gameObject.CompareTag("RaceTrackBorder"))
+        {
+            isCollidingTrackBorder = true;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D other) {
         if (other.gameObject.CompareTag("Meteor"))
         {
             isCollidingMeteor = false;
+        }
+
+        if (other.gameObject.CompareTag("RaceTrackBorder"))
+        {
+            isCollidingTrackBorder = false;
         }
     }
 

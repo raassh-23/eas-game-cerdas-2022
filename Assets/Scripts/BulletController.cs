@@ -16,7 +16,7 @@ public class BulletController : MonoBehaviour
 
     private void FixedUpdate() {
         float dist = bulletSpeed * Time.fixedDeltaTime;
-        transform.Translate(-1*Vector2.up * dist);
+        transform.Translate(-1 * Vector2.up * dist);
         curDistance += dist;
         if (curDistance > bulletRange) {
             shooter.shotMissed++;
@@ -25,17 +25,24 @@ public class BulletController : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.tag == "Spaceship") {
+        if (other.gameObject.CompareTag("Spaceship")) {
             var spaceship = other.gameObject.GetComponent<SpaceshipController>();
             if (shooter != spaceship) {
                 shooter.shotHit++;
             }
+
             Destroy(gameObject);
         }
 
-        if (other.gameObject.tag == "Meteor") {
+        if (other.gameObject.CompareTag("Meteor")) {
             shooter.shotHit++;
             Destroy(gameObject);
+        }
+
+        if (other.gameObject.CompareTag("RaceTrackBorder")) {
+            Vector2 reflection = Vector2.Reflect(transform.up, other.contacts[0].normal);
+            
+            transform.up = reflection;
         }
     }
 }

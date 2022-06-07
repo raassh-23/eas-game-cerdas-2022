@@ -35,6 +35,7 @@ public class MineController : MonoBehaviour
             {
                 dropper.shotHit++;
             }
+
             DestroyMine();
         }
     }

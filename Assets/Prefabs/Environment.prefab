@@ -544,7 +544,7 @@ GameObject:
   - component: {fileID: 5193602961700135626}
   m_Layer: 0
   m_Name: RaceTrackBorderRenderer2
-  m_TagString: InnerRaceTrackBorder
+  m_TagString: RaceTrackBorder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -683,7 +683,7 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -869,7 +869,7 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1114,10 +1114,6 @@ PrefabInstance:
       value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 9055639450618891347, guid: 4419f3c67afa5434abf5b7d7fafcf455, type: 3}
-      propertyPath: maxSpeed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 9055639450618891347, guid: 4419f3c67afa5434abf5b7d7fafcf455, type: 3}
       propertyPath: startPosition
       value: 
       objectReference: {fileID: 3647514239732650274}
@@ -1285,10 +1281,6 @@ PrefabInstance:
       value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 9055639450618891347, guid: 4419f3c67afa5434abf5b7d7fafcf455, type: 3}
-      propertyPath: maxSpeed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 9055639450618891347, guid: 4419f3c67afa5434abf5b7d7fafcf455, type: 3}
       propertyPath: startPosition
       value: 
       objectReference: {fileID: 5611098663549543401}
@@ -1380,10 +1372,6 @@ PrefabInstance:
     - target: {fileID: 9055639450618891346, guid: 4419f3c67afa5434abf5b7d7fafcf455, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 9055639450618891347, guid: 4419f3c67afa5434abf5b7d7fafcf455, type: 3}
-      propertyPath: maxSpeed
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 9055639450618891347, guid: 4419f3c67afa5434abf5b7d7fafcf455, type: 3}
       propertyPath: startPosition
