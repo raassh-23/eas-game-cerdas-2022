@@ -433,11 +433,15 @@ public class SpaceshipController : Agent
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Bullet")
-            || other.gameObject.CompareTag("Meteor")
+        if (other.gameObject.CompareTag("Meteor")
             || other.gameObject.CompareTag("RaceTrackBorder"))
         {
             TakeDamage(1);
+        }
+
+        if (other.gameObject.CompareTag("Bullet"))
+        {
+            TakeDamage(2);
         }
 
         if (other.gameObject.CompareTag("Meteor"))

@@ -34,7 +34,7 @@ public class BulletController : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (other.gameObject.CompareTag("Meteor")) {
+        if (other.gameObject.CompareTag("Meteor") || other.gameObject.CompareTag("Mine")) {
             shooter.shotHit++;
             Destroy(gameObject);
         }

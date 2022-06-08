@@ -233,6 +233,7 @@ MonoBehaviour:
   isInTrack: 0
   outOfTrackTime: 0
   currentLap: 0
+  maxLap: 0
   startPosition: {fileID: 0}
   onFinishedRace:
     m_PersistentCalls:
@@ -244,6 +245,7 @@ MonoBehaviour:
   isCollidingTrackBorder: 0
   isCollidingMeteor: 0
   currentPosition: 0
+  isPlayer: 0
 --- !u!114 &8486356002847725377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,7 +259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 15
+    VectorObservationSize: 14
     NumStackedVectorObservations: 5
     m_ActionSpec:
       m_NumContinuousActions: 2
