@@ -378,7 +378,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ef5712efe6af1c4abf2a6dfb61884e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meteor: {fileID: 4749727272214839744, guid: 9a83e55d42cc20c44b4f3c9a000a1dab, type: 3}
+  meteors:
+  - {fileID: 4749727272214839744, guid: 9a83e55d42cc20c44b4f3c9a000a1dab, type: 3}
+  - {fileID: 1179496670731178829, guid: de9b18b3cba11c140ae06b1c880e230c, type: 3}
+  - {fileID: 7695523217612912375, guid: 384fa024d7afbd6489cf90fdb6af6086, type: 3}
+  - {fileID: 8196736129239111019, guid: 587ad16e3c2b3e44ba6685280bc86513, type: 3}
   meteorsGroup: {fileID: 5193602961114684024}
   meteorsCount: 6
   powerUp: {fileID: 4697785709899144872, guid: 17cf3ae6b5df19546a4cce5745914697, type: 3}

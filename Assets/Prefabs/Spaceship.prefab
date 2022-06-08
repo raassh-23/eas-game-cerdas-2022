@@ -184,18 +184,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.010524482, y: -0.09472047}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.04, y: 0.84}
+    oldSize: {x: 0.78, y: 0.91}
     newSize: {x: 1.04, y: 0.84}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.04, y: 0.84}
+  m_Size: {x: 0.77478236, y: 0.65055895}
   m_EdgeRadius: 0
 --- !u!114 &9055639450618891347
 MonoBehaviour:
@@ -241,6 +241,8 @@ MonoBehaviour:
   mineHit: 0
   shotMissed: 0
   mineMissed: 0
+  isCollidingTrackBorder: 0
+  isCollidingMeteor: 0
   currentPosition: 0
 --- !u!114 &8486356002847725377
 MonoBehaviour:
@@ -255,7 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 16
+    VectorObservationSize: 15
     NumStackedVectorObservations: 5
     m_ActionSpec:
       m_NumContinuousActions: 2
