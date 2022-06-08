@@ -231,12 +231,12 @@ public class SpaceshipController : Agent
         if (nextCheckpoint != null)
         {
             sensor.AddObservation(nextCheckpoint.transform.position - transform.position);
-            sensor.AddObservation(nextCheckpoint.GetDirection());
+            sensor.AddObservation(nextCheckpoint.transform.rotation.eulerAngles.z);
         }
         else
         {
             sensor.AddObservation(Vector3.zero);
-            sensor.AddObservation(Vector2.zero);
+            sensor.AddObservation(0);
         }
     }
 
@@ -279,14 +279,11 @@ public class SpaceshipController : Agent
             lapSinceLastReward = 0;
         }
 
-        if (isCollidingTrackBorder)
+        if (isCollidingTrackBorder || isCollidingMeteor)
         {
-            AddReward(-5 * existentialReward);
-        }
-
-        if (isCollidingMeteor)
-        {
-            AddReward(-5 * existentialReward);
+            AddReward(-4 * existentialReward);
+        } else {
+            AddReward(2 * existentialReward);
         }
 
         if (!isInTrack)
@@ -302,7 +299,7 @@ public class SpaceshipController : Agent
 
         if (damageTaken > 0)
         {
-            AddReward(-6 * damageTaken * existentialReward);
+            AddReward(-5 * damageTaken * existentialReward);
             damageTaken = 0;
         }
 
@@ -314,7 +311,7 @@ public class SpaceshipController : Agent
 
         if (shotHit > 0)
         {
-            AddReward(6 * shotHit * existentialReward);
+            AddReward(4 * shotHit * existentialReward);
             shotHit = 0;
         }
 
@@ -345,8 +342,8 @@ public class SpaceshipController : Agent
 
     private void MoveShip(float rotation, float forward)
     {
-        Vector2 speed = -1 * transform.up * (forward * acceleration);
-        rigidbody2d.AddForce(forward > 0 ? speed : speed * 0.33f);
+        Vector2 force = -1 * transform.up * (forward * acceleration);
+        rigidbody2d.AddForce(forward > 0 ? force : force * 0.33f);
         transform.Rotate(Vector3.forward, rotation * rotateSpeed * Time.fixedDeltaTime);
 
         if (rigidbody2d.velocity.magnitude > maxSpeed)
