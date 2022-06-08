@@ -80,8 +80,8 @@ public class EnvironmentManager : MonoBehaviour
         positions.Sort((a, b) => {
             if (a.currentLap != b.currentLap) {
                 return a.currentLap.CompareTo(b.currentLap);
-            } else if (a.nextCheckpoint.order != b.nextCheckpoint.order) {
-                return a.nextCheckpoint.order.CompareTo(b.nextCheckpoint.order);
+            } else if (a.currectCheckpointOrder != b.currectCheckpointOrder) {
+                return a.currectCheckpointOrder.CompareTo(b.currectCheckpointOrder);
             } else {
                 return b.GetDistanceToNextCheckpoint().CompareTo(a.GetDistanceToNextCheckpoint());
             }

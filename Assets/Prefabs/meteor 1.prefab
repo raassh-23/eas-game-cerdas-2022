@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4749727272214839746}
   - component: {fileID: 4749727272214839745}
   - component: {fileID: 7951431010112760476}
+  - component: {fileID: 8271516516727270573}
   m_Layer: 0
   m_Name: meteor 1
   m_TagString: Meteor
@@ -112,3 +113,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eb5f6c6b0bf88c4fa34414f09cc7422, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!50 &8271516516727270573
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4749727272214839744}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

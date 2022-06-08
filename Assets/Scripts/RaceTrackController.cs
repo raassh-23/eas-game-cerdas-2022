@@ -153,7 +153,6 @@ public class RaceTrackController : MonoBehaviour
 
         for (int i = 0; i < count; i++) {
             int randomIndex = Random.Range(0, meteors.Length);
-            Debug.Log(randomIndex);
             GameObject meteorClone = Instantiate(meteors[randomIndex], meteorsGroup);
             meteorClone.transform.position = GetRandomPosition();
             meteorClone.transform.rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));

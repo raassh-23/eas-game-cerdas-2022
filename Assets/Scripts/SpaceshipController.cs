@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
@@ -57,6 +55,16 @@ public class SpaceshipController : Agent
     private CheckpointController currentCheckpoint;
     public CheckpointController nextCheckpoint { get; private set; }
 
+    public int currectCheckpointOrder {
+        get {
+            if (currentCheckpoint == null) {
+                return -1;
+            }
+
+            return currentCheckpoint.order;
+        }
+    }
+
     private Rigidbody2D rigidbody2d;
 
     public bool isInTrack;
@@ -73,7 +81,7 @@ public class SpaceshipController : Agent
     private float nextMineTime;
 
     public int currentLap;
-    private int maxLap;
+    public int maxLap;
 
     public Transform startPosition;
 
@@ -102,6 +110,8 @@ public class SpaceshipController : Agent
     public bool isCollidingMeteor;
 
     public int currentPosition;
+
+    public bool isPlayer = false;
 
     private bool canShoot
     {
