@@ -34,11 +34,13 @@ public class PositionPanelController : MonoBehaviour
     private void Start()
     {
         indicator.color = spaceship.GetComponent<SpriteRenderer>().color;
-        nameText.text = spaceship.name;
 
         if (spaceship.isPlayer)
         {
+            nameText.text = "You";
             background.sprite = backgroundPlayer;
+        } else {
+            nameText.text = spaceship.name;
         }
     }
 

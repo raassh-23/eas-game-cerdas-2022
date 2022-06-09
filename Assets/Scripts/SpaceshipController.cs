@@ -129,8 +129,7 @@ public class SpaceshipController : Agent
         }
     }
 
-    private void Start()
-    {
+    private void Awake() {
         rigidbody2d = GetComponent<Rigidbody2D>();
 
         environmentManager = GetComponentInParent<EnvironmentManager>();
@@ -147,7 +146,10 @@ public class SpaceshipController : Agent
             checkPointReward = 2f / (CheckpointController.checkpoints.Count * maxLap);
             lapReward = 2f / maxLap;
         }
+    }
 
+    private void Start()
+    {
         init();
     }
 
