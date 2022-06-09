@@ -201,8 +201,8 @@ public class SpaceshipController : Agent
         float h = -Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
-        actionsOut.ContinuousActions.Array[0] = h;
-        actionsOut.ContinuousActions.Array[1] = v;
+        actionsOut.ContinuousActions.Array[0] = v;
+        actionsOut.ContinuousActions.Array[1] = h;
 
         if (Input.GetMouseButton(0))
         {
@@ -221,7 +221,7 @@ public class SpaceshipController : Agent
         sensor.AddObservation(ammo);
         sensor.AddObservation(mines);
         // sensor.AddObservation(isInTrack);
-        sensor.AddObservation(transform.rotation.eulerAngles.z);
+        sensor.AddObservation(((transform.rotation.eulerAngles.z + 360) % 360) / 360);
         sensor.AddObservation(isCollidingTrackBorder);
         sensor.AddObservation(isCollidingMeteor);
         sensor.AddObservation((maxLap - currentLap) / maxLap);
@@ -231,19 +231,21 @@ public class SpaceshipController : Agent
         if (nextCheckpoint != null)
         {
             sensor.AddObservation(nextCheckpoint.transform.position - transform.position);
-            sensor.AddObservation(nextCheckpoint.transform.rotation.eulerAngles.z);
+            sensor.AddObservation(((nextCheckpoint.transform.rotation.eulerAngles.z + 360) % 360) / 360);
         }
         else
         {
             sensor.AddObservation(Vector3.zero);
-            sensor.AddObservation(0);
+            sensor.AddObservation(-1);
         }
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        float rotation = actions.ContinuousActions[0];
-        float forward = actions.ContinuousActions[1];
+        float forward = Mathf.Clamp(actions.ContinuousActions[0], -1, 1);
+        float rotation = Mathf.Clamp(actions.ContinuousActions[1], -1, 1);
+
+        // Debug.Log("Action received: " + rotation + " " + forward);
 
         MoveShip(rotation, forward);
 
@@ -251,6 +253,7 @@ public class SpaceshipController : Agent
         {
             case 1:
                 Shoot();
+                AddReward(-3 * existentialReward);
                 break;
             default:
                 break;
@@ -260,6 +263,7 @@ public class SpaceshipController : Agent
         {
             case 1:
                 DropMine();
+                AddReward(-10 * existentialReward);
                 break;
             default:
                 break;
@@ -282,8 +286,6 @@ public class SpaceshipController : Agent
         if (isCollidingTrackBorder || isCollidingMeteor)
         {
             AddReward(-4 * existentialReward);
-        } else {
-            AddReward(2 * existentialReward);
         }
 
         if (!isInTrack)
@@ -309,29 +311,29 @@ public class SpaceshipController : Agent
             pickedUpPowerup = 0;
         }
 
-        if (shotHit > 0)
-        {
-            AddReward(4 * shotHit * existentialReward);
-            shotHit = 0;
-        }
+        // if (shotHit > 0)
+        // {
+        //     AddReward(4 * shotHit * existentialReward);
+        //     shotHit = 0;
+        // }
 
-        if (mineHit > 0)
-        {
-            AddReward(20 * mineHit * existentialReward);
-            mineHit = 0;
-        }
+        // if (mineHit > 0)
+        // {
+        //     AddReward(20 * mineHit * existentialReward);
+        //     mineHit = 0;
+        // }
 
-        if (shotMissed > 0)
-        {
-            AddReward(-2 * shotMissed * existentialReward);
-            shotMissed = 0;
-        }
+        // if (shotMissed > 0)
+        // {
+        //     AddReward(-2 * shotMissed * existentialReward);
+        //     shotMissed = 0;
+        // }
 
-        if (mineMissed > 0)
-        {
-            AddReward(-10 * mineMissed * existentialReward);
-            mineMissed = 0;
-        }
+        // if (mineMissed > 0)
+        // {
+        //     AddReward(-10 * mineMissed * existentialReward);
+        //     mineMissed = 0;
+        // }
     }
 
     public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
@@ -543,5 +545,10 @@ public class SpaceshipController : Agent
         {
             return -1;
         }
+    }
+
+    public void AddRelativeReward(float reward)
+    {
+        AddReward(reward * existentialReward);
     }
 }

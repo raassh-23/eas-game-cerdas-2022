@@ -16,7 +16,7 @@ public class MineController : MonoBehaviour
     private void Update() {
         curDuration += Time.deltaTime;
         if (curDuration > mineDuration) {
-            dropper.mineMissed++;
+            // dropper.mineMissed++;
             DestroyMine();
         }
     }
@@ -33,7 +33,10 @@ public class MineController : MonoBehaviour
             var spaceship = other.gameObject.GetComponent<SpaceshipController>();
             if (dropper != spaceship)
             {
-                dropper.shotHit++;
+                // dropper.shotHit++;
+                dropper.AddRelativeReward(20);
+            } else {
+                dropper.AddRelativeReward(-20);
             }
 
             DestroyMine();
