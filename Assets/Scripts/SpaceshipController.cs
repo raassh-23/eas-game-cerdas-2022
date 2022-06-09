@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
@@ -57,6 +55,16 @@ public class SpaceshipController : Agent
     private CheckpointController currentCheckpoint;
     public CheckpointController nextCheckpoint { get; private set; }
 
+    public int currectCheckpointOrder {
+        get {
+            if (currentCheckpoint == null) {
+                return -1;
+            }
+
+            return currentCheckpoint.order;
+        }
+    }
+
     private Rigidbody2D rigidbody2d;
 
     public bool isInTrack;
@@ -73,8 +81,8 @@ public class SpaceshipController : Agent
     private float nextMineTime;
 
     public int currentLap;
-    private int maxLap;
-    
+    public int maxLap;
+
     public Transform startPosition;
 
     private int checkPointSinceLastReward;
@@ -97,11 +105,13 @@ public class SpaceshipController : Agent
 
     private bool isReset;
 
-    private bool isCollidingTrackBorder;
+    public bool isCollidingTrackBorder;
 
-    private bool isCollidingMeteor;
+    public bool isCollidingMeteor;
 
     public int currentPosition;
+
+    public bool isPlayer = false;
 
     private bool canShoot
     {
@@ -165,6 +175,7 @@ public class SpaceshipController : Agent
         currentCheckpoint = null;
         nextCheckpoint = CheckpointController.getNextCheckpoint(currentCheckpoint);
         isCollidingTrackBorder = false;
+        isCollidingMeteor = false;
     }
 
     private void Update()
@@ -213,28 +224,28 @@ public class SpaceshipController : Agent
         sensor.AddObservation(transform.rotation.eulerAngles.z);
         sensor.AddObservation(isCollidingTrackBorder);
         sensor.AddObservation(isCollidingMeteor);
-        sensor.AddObservation(maxLap - currentLap);
+        sensor.AddObservation((maxLap - currentLap) / maxLap);
         sensor.AddObservation(rigidbody2d.velocity);
-        sensor.AddObservation(currentPosition);
-        sensor.AddObservation(GetDistanceToNextCheckpoint());
+        sensor.AddObservation(currentPosition / 3f);
+        // sensor.AddObservation(GetDistanceToNextCheckpoint());
         if (nextCheckpoint != null)
         {
-            sensor.AddObservation(Vector3.Normalize(nextCheckpoint.transform.position - transform.position));
-            sensor.AddObservation(nextCheckpoint.GetDirection());
+            sensor.AddObservation(nextCheckpoint.transform.position - transform.position);
+            sensor.AddObservation(nextCheckpoint.transform.rotation.eulerAngles.z);
         }
         else
         {
             sensor.AddObservation(Vector3.zero);
-            sensor.AddObservation(Vector2.zero);
+            sensor.AddObservation(0);
         }
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        float h = actions.ContinuousActions[0];
-        float v = actions.ContinuousActions[1];
+        float rotation = actions.ContinuousActions[0];
+        float forward = actions.ContinuousActions[1];
 
-        MoveShip(h, v);
+        MoveShip(rotation, forward);
 
         switch (actions.DiscreteActions[0])
         {
@@ -268,18 +279,16 @@ public class SpaceshipController : Agent
             lapSinceLastReward = 0;
         }
 
-        if (isCollidingTrackBorder) {
-            AddReward(-4 * existentialReward);
-        }
-
-        if (isCollidingMeteor)
+        if (isCollidingTrackBorder || isCollidingMeteor)
         {
             AddReward(-4 * existentialReward);
+        } else {
+            AddReward(2 * existentialReward);
         }
 
         if (!isInTrack)
         {
-            AddReward(-4 * existentialReward);
+            AddReward(-5 * existentialReward);
         }
 
         if (isReset)
@@ -290,13 +299,13 @@ public class SpaceshipController : Agent
 
         if (damageTaken > 0)
         {
-            AddReward(-6 * damageTaken * existentialReward);
+            AddReward(-5 * damageTaken * existentialReward);
             damageTaken = 0;
         }
 
         if (pickedUpPowerup > 0)
         {
-            AddReward(6 * existentialReward);
+            AddReward(10 * existentialReward);
             pickedUpPowerup = 0;
         }
 
@@ -331,11 +340,11 @@ public class SpaceshipController : Agent
         actionMask.SetActionEnabled(1, 1, canDropMine);
     }
 
-    private void MoveShip(float h, float v)
+    private void MoveShip(float rotation, float forward)
     {
-        Vector2 speed = -1 * transform.up * (v * acceleration);
-        rigidbody2d.AddForce(v > 0 ? speed : speed * 0.5f);
-        transform.Rotate(Vector3.forward, h * rotateSpeed * Time.fixedDeltaTime);
+        Vector2 force = -1 * transform.up * (forward * acceleration);
+        rigidbody2d.AddForce(forward > 0 ? force : force * 0.33f);
+        transform.Rotate(Vector3.forward, rotation * rotateSpeed * Time.fixedDeltaTime);
 
         if (rigidbody2d.velocity.magnitude > maxSpeed)
         {
@@ -365,7 +374,7 @@ public class SpaceshipController : Agent
         if (other.gameObject.CompareTag("RaceTrack"))
         {
             isInTrack = true;
-        } 
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -424,13 +433,17 @@ public class SpaceshipController : Agent
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Bullet") || other.gameObject.CompareTag("Meteor"))
+        if (other.gameObject.CompareTag("Meteor")
+            || other.gameObject.CompareTag("RaceTrackBorder"))
         {
             TakeDamage(1);
         }
-    }
 
-    private void OnCollisionStay2D(Collision2D other) {
+        if (other.gameObject.CompareTag("Bullet"))
+        {
+            TakeDamage(2);
+        }
+
         if (other.gameObject.CompareTag("Meteor"))
         {
             isCollidingMeteor = true;
@@ -442,7 +455,8 @@ public class SpaceshipController : Agent
         }
     }
 
-    private void OnCollisionExit2D(Collision2D other) {
+    private void OnCollisionExit2D(Collision2D other)
+    {
         if (other.gameObject.CompareTag("Meteor"))
         {
             isCollidingMeteor = false;

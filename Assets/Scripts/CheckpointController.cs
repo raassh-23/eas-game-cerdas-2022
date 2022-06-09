@@ -27,7 +27,7 @@ public class CheckpointController : MonoBehaviour
 
     private void Update() {
         if (spaceshipController.nextCheckpoint == this) {
-            spriteRenderer.color = new Color(1, 1, 1, 1f);
+            spriteRenderer.color = new Color(136, 129, 132, 0.25f);
         } else {
             spriteRenderer.color = new Color(1, 1, 1, 0f);
         }

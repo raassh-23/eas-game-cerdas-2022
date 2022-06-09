@@ -5,7 +5,7 @@ using UnityEngine;
 public class RaceTrackController : MonoBehaviour
 {
     [SerializeField]
-    private GameObject meteor;
+    private GameObject[] meteors;
 
     [SerializeField]
     private Transform meteorsGroup;
@@ -73,7 +73,7 @@ public class RaceTrackController : MonoBehaviour
         var innerPoints = new List<Transform>();
         for (int i = 0; i < track.inner.Count; i++) {
             var newPoint = Instantiate(point, inner.transform);
-            newPoint.transform.position = track.inner[i];
+            newPoint.transform.localPosition = track.inner[i];
             innerPoints.Add(newPoint.transform);
         }
         inner.InitPoints(innerPoints);
@@ -82,7 +82,7 @@ public class RaceTrackController : MonoBehaviour
         var outerPoints = new List<Transform>();
         for (int i = 0; i < track.outer.Count; i++) {
             var newPoint = Instantiate(point, outer.transform);
-            newPoint.transform.position = track.outer[i];
+            newPoint.transform.localPosition = track.outer[i];
             outerPoints.Add(newPoint.transform);
         }
         outer.InitPoints(outerPoints);
@@ -95,8 +95,8 @@ public class RaceTrackController : MonoBehaviour
         for (int i = 0; i < track.checkpoints.Count; i++) {
             var newCheckpoint = Instantiate(checkpoint, checkpoints).GetComponent<CheckpointController>();
             var cpData = track.checkpoints[i];
-            newCheckpoint.transform.position = cpData.point;
-            newCheckpoint.transform.rotation = Quaternion.Euler(0, 0, cpData.angle);
+            newCheckpoint.transform.localPosition = cpData.point;
+            newCheckpoint.transform.localRotation = Quaternion.Euler(0, 0, cpData.angle);
             newCheckpoint.transform.localScale = new Vector3(newCheckpoint.transform.localScale.x, cpData.length, 1);
             newCheckpoint.order = cpData.order;
             newCheckpoint.spaceshipController = mainPlayer;
@@ -113,8 +113,8 @@ public class RaceTrackController : MonoBehaviour
         }
 
         for (int i = 0; i < track.starts.Count; i++) {
-            startPoints[i].position = track.starts[i].point;
-            startPoints[i].rotation = Quaternion.Euler(0, 0, track.starts[i].angle);
+            startPoints[i].localPosition = track.starts[i].point;
+            startPoints[i].localRotation = Quaternion.Euler(0, 0, track.starts[i].angle);
         }
     }
 
@@ -149,9 +149,14 @@ public class RaceTrackController : MonoBehaviour
     }
 
     private void SpawnMeteors(int count) {
+        count += Random.Range(0, count);
+
         for (int i = 0; i < count; i++) {
-            GameObject meteorClone = Instantiate(meteor, meteorsGroup);
+            int randomIndex = Random.Range(0, meteors.Length);
+            GameObject meteorClone = Instantiate(meteors[randomIndex], meteorsGroup);
             meteorClone.transform.position = GetRandomPosition();
+            meteorClone.transform.rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
+            meteorClone.transform.localScale = new Vector3(Random.Range(0.5f, 1.5f), Random.Range(0.5f, 1.5f), 1);
         }
     }
 

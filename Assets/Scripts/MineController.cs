@@ -38,5 +38,9 @@ public class MineController : MonoBehaviour
 
             DestroyMine();
         }
+
+        if (other.gameObject.tag == "Bullet") {
+            DestroyMine();
+        }
     }
 }
