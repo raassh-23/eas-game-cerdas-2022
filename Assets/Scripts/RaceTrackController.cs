@@ -102,9 +102,6 @@ public class RaceTrackController : MonoBehaviour
             newCheckpoint.spaceshipController = mainPlayer;
             newCheckpoint.AddSelf();
 
-            // enable this for model 7 up
-            // newCheckpoint.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-
             if (i == track.checkpoints.Count - 1) {
                 newCheckpoint.isLast = true;
             } else {
@@ -112,9 +109,17 @@ public class RaceTrackController : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < track.starts.Count; i++) {
-            startPoints[i].localPosition = track.starts[i].point;
-            startPoints[i].localRotation = Quaternion.Euler(0, 0, track.starts[i].angle);
+        List<int> randomStartPoints = new List<int>();
+        while (randomStartPoints.Count < track.starts.Count) {
+            int index = Random.Range(0, track.starts.Count);
+            if (!randomStartPoints.Contains(index)) {
+                randomStartPoints.Add(index);
+            }
+        }
+
+        for (int i = 0; i < randomStartPoints.Count; i++) {
+            startPoints[i].localPosition = track.starts[randomStartPoints[i]].point;
+            startPoints[i].localRotation = Quaternion.Euler(0, 0, track.starts[randomStartPoints[i]].angle);
         }
     }
 

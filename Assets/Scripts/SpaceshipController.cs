@@ -236,7 +236,7 @@ public class SpaceshipController : Agent
         sensor.AddObservation(isCollidingMeteor);
         sensor.AddObservation((maxLap - currentLap) / maxLap);
         sensor.AddObservation(rigidbody2d.velocity);
-        sensor.AddObservation(currentPosition / 3f);
+        sensor.AddObservation(currentPosition / 5f);
         if (nextCheckpoint != null)
         {
             sensor.AddObservation(nextCheckpoint.transform.position - transform.position);

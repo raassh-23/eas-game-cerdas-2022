@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class PointController : MonoBehaviour
 {
-    public bool isDestroyed;
+
+    private void Start() {
+        
+    }
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
