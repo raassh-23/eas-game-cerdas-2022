@@ -19,7 +19,7 @@ public class BulletController : MonoBehaviour
         transform.Translate(-1 * Vector2.up * dist);
         curDistance += dist;
         if (curDistance > bulletRange) {
-            shooter.shotMissed++;
+            // shooter.shotMissed++;
             Destroy(gameObject);
         }
     }
@@ -28,14 +28,16 @@ public class BulletController : MonoBehaviour
         if (other.gameObject.CompareTag("Spaceship")) {
             var spaceship = other.gameObject.GetComponent<SpaceshipController>();
             if (shooter != spaceship) {
-                shooter.shotHit++;
+                // shooter.shotHit++;
+                shooter.AddRelativeReward(6);
             }
 
             Destroy(gameObject);
         }
 
-        if (other.gameObject.CompareTag("Meteor") || other.gameObject.CompareTag("Mine")) {
-            shooter.shotHit++;
+        if (other.gameObject.CompareTag("Meteor")) {
+            // shooter.shotHit++;
+            shooter.AddRelativeReward(3);
             Destroy(gameObject);
         }
 
@@ -43,6 +45,14 @@ public class BulletController : MonoBehaviour
             Vector2 reflection = Vector2.Reflect(transform.up, other.contacts[0].normal);
             
             transform.up = reflection;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.CompareTag("Mine")) {
+            // shooter.shotHit++;
+            shooter.AddRelativeReward(3);
+            Destroy(gameObject);
         }
     }
 }
