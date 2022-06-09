@@ -138,6 +138,8 @@ public class SpaceshipController : Agent
         {
             existentialReward = 1f / 20000;
             maxLap = 3;
+            checkPointReward = 2f / 30;
+            lapReward = 2f / 3;
         }
         else
         {
@@ -222,14 +224,12 @@ public class SpaceshipController : Agent
         sensor.AddObservation(health);
         sensor.AddObservation(ammo);
         sensor.AddObservation(mines);
-        // sensor.AddObservation(isInTrack);
         sensor.AddObservation(((transform.rotation.eulerAngles.z + 360) % 360) / 360);
         sensor.AddObservation(isCollidingTrackBorder);
         sensor.AddObservation(isCollidingMeteor);
         sensor.AddObservation((maxLap - currentLap) / maxLap);
         sensor.AddObservation(rigidbody2d.velocity);
         sensor.AddObservation(currentPosition / 3f);
-        // sensor.AddObservation(GetDistanceToNextCheckpoint());
         if (nextCheckpoint != null)
         {
             sensor.AddObservation(nextCheckpoint.transform.position - transform.position);
