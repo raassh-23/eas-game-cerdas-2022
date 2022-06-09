@@ -32,7 +32,7 @@ public class EnvironmentManager : MonoBehaviour
 
     private float timer = 0;
 
-    private bool isGameOver = false;
+    public bool isGameOver = false;
     
     private void Awake()
     {
@@ -185,6 +185,13 @@ public class EnvironmentManager : MonoBehaviour
         if (isGameOver)
         {
             return;
+        }
+
+        if (player.currentPosition == 1)
+        {
+            AudioManager.Instance.PlayWinSFX();
+        } else {
+            AudioManager.Instance.PlayLoseSFX();
         }
 
         isGameOver = true;

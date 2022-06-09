@@ -1,8 +1,10 @@
+using System;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public class SpaceshipController : Agent
 {
@@ -55,9 +57,12 @@ public class SpaceshipController : Agent
     private CheckpointController currentCheckpoint;
     public CheckpointController nextCheckpoint { get; private set; }
 
-    public int currectCheckpointOrder {
-        get {
-            if (currentCheckpoint == null) {
+    public int currectCheckpointOrder
+    {
+        get
+        {
+            if (currentCheckpoint == null)
+            {
                 return -1;
             }
 
@@ -129,7 +134,8 @@ public class SpaceshipController : Agent
         }
     }
 
-    private void Awake() {
+    private void Awake()
+    {
         rigidbody2d = GetComponent<Rigidbody2D>();
 
         environmentManager = GetComponentInParent<EnvironmentManager>();
@@ -221,6 +227,7 @@ public class SpaceshipController : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
+
         sensor.AddObservation(health);
         sensor.AddObservation(ammo);
         sensor.AddObservation(mines);
@@ -240,77 +247,85 @@ public class SpaceshipController : Agent
             sensor.AddObservation(Vector3.zero);
             sensor.AddObservation(-1);
         }
+
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        float forward = Mathf.Clamp(actions.ContinuousActions[0], -1, 1);
-        float rotation = Mathf.Clamp(actions.ContinuousActions[1], -1, 1);
 
-        // Debug.Log("Action received: " + rotation + " " + forward);
-
-        MoveShip(rotation, forward);
-
-        switch (actions.DiscreteActions[0])
+        try
         {
-            case 1:
-                Shoot();
-                AddReward(-3 * existentialReward);
-                break;
-            default:
-                break;
+            float forward = Mathf.Clamp(actions.ContinuousActions[0], -1, 1);
+            float rotation = Mathf.Clamp(actions.ContinuousActions[1], -1, 1);
+
+            MoveShip(rotation, forward);
+
+            switch (actions.DiscreteActions[0])
+            {
+                case 1:
+                    Shoot();
+                    AddReward(-3 * existentialReward);
+                    break;
+                default:
+                    break;
+            }
+
+            switch (actions.DiscreteActions[1])
+            {
+                case 1:
+                    DropMine();
+                    AddReward(-10 * existentialReward);
+                    break;
+                default:
+                    break;
+            }
+
+            AddReward(-1 * existentialReward);
+
+            if (checkPointSinceLastReward > 0)
+            {
+                AddReward(checkPointSinceLastReward * checkPointReward);
+                checkPointSinceLastReward = 0;
+            }
+
+            if (lapSinceLastReward > 0)
+            {
+                AddReward(lapSinceLastReward * lapReward);
+                lapSinceLastReward = 0;
+            }
+
+            if (isCollidingTrackBorder || isCollidingMeteor)
+            {
+                AddReward(-4 * existentialReward);
+            }
+
+            if (!isInTrack)
+            {
+                AddReward(-5 * existentialReward);
+            }
+
+            if (isReset)
+            {
+                AddReward(-20 * existentialReward);
+                isReset = false;
+            }
+
+            if (damageTaken > 0)
+            {
+                AddReward(-5 * damageTaken * existentialReward);
+                damageTaken = 0;
+            }
+
+            if (pickedUpPowerup > 0)
+            {
+                AddReward(10 * existentialReward);
+                pickedUpPowerup = 0;
+            }
+
         }
-
-        switch (actions.DiscreteActions[1])
+        catch (System.Exception ex)
         {
-            case 1:
-                DropMine();
-                AddReward(-10 * existentialReward);
-                break;
-            default:
-                break;
-        }
-
-        AddReward(-1 * existentialReward);
-
-        if (checkPointSinceLastReward > 0)
-        {
-            AddReward(checkPointSinceLastReward * checkPointReward);
-            checkPointSinceLastReward = 0;
-        }
-
-        if (lapSinceLastReward > 0)
-        {
-            AddReward(lapSinceLastReward * lapReward);
-            lapSinceLastReward = 0;
-        }
-
-        if (isCollidingTrackBorder || isCollidingMeteor)
-        {
-            AddReward(-4 * existentialReward);
-        }
-
-        if (!isInTrack)
-        {
-            AddReward(-5 * existentialReward);
-        }
-
-        if (isReset)
-        {
-            AddReward(-20 * existentialReward);
-            isReset = false;
-        }
-
-        if (damageTaken > 0)
-        {
-            AddReward(-5 * damageTaken * existentialReward);
-            damageTaken = 0;
-        }
-
-        if (pickedUpPowerup > 0)
-        {
-            AddReward(10 * existentialReward);
-            pickedUpPowerup = 0;
+            Debug.Log(ex);
         }
 
         // if (shotHit > 0)
@@ -401,6 +416,11 @@ public class SpaceshipController : Agent
             bullet.bulletRange = bulletRange;
             bullet.bulletSpeed = bulletSpeed;
             bullet.shooter = this;
+
+            if (isPlayer && !environmentManager.isTraining && !environmentManager.isGameOver)
+            {
+                AudioManager.Instance.PlayShootSFX();
+            }
         }
     }
 
@@ -413,6 +433,11 @@ public class SpaceshipController : Agent
             MineController mine = Instantiate(minePrefab, mineSpawn.position, transform.rotation)
                 .GetComponent<MineController>();
             mine.dropper = this;
+
+            if (isPlayer && !environmentManager.isTraining && !environmentManager.isGameOver)
+            {
+                AudioManager.Instance.PlayDropMineSFX();
+            }
         }
     }
 
@@ -433,6 +458,11 @@ public class SpaceshipController : Agent
         health = initialHealth;
         isInTrack = true;
         isReset = true;
+
+        if (isPlayer && !environmentManager.isTraining && !environmentManager.isGameOver)
+        {
+            AudioManager.Instance.PlayResetSFX();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -476,9 +506,14 @@ public class SpaceshipController : Agent
     {
         health -= damage;
         damageTaken += damage;
+
         if (health <= 0)
         {
             ResetSpaceship();
+        }
+        else if (isPlayer && !environmentManager.isTraining && !environmentManager.isGameOver)
+        {
+            AudioManager.Instance.PlayDamagedSFX();
         }
     }
 
@@ -489,14 +524,19 @@ public class SpaceshipController : Agent
         switch (randNum)
         {
             case 1:
-                ammo += 10;
+                ammo += 20;
                 break;
             case 2:
                 mines += 3;
                 break;
-            case 3:
-                health += 5;
+            default:
+                health += 10;
                 break;
+        }
+
+        if (isPlayer && !environmentManager.isTraining && !environmentManager.isGameOver)
+        {
+            AudioManager.Instance.PlayPowerUpSFX();
         }
 
         pickedUpPowerup++;
@@ -533,6 +573,11 @@ public class SpaceshipController : Agent
                     onFinishedRace?.Invoke(this);
                     return;
                 }
+            }
+
+            if (isPlayer && !environmentManager.isTraining && !environmentManager.isGameOver)
+            {
+                AudioManager.Instance.PlayCheckpointSFX();
             }
         }
     }
