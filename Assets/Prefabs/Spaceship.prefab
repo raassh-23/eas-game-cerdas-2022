@@ -220,13 +220,13 @@ MonoBehaviour:
   bulletSpawn: {fileID: 512032375752967463}
   bulletSpeed: 20
   bulletRange: 25
-  initAmmo: 10
+  initAmmo: 20
   shootCooldown: 1
   minePrefab: {fileID: 7848703301543477784, guid: bb9dd14a1d176654db8a4e50f6344a6f, type: 3}
   mineCooldown: 5
   initMines: 3
   mineSpawn: {fileID: 1129855719684946341}
-  ammo: 10
+  ammo: 20
   mines: 3
   initialHealth: 10
   health: 0

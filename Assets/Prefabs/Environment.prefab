@@ -384,10 +384,10 @@ MonoBehaviour:
   - {fileID: 7695523217612912375, guid: 384fa024d7afbd6489cf90fdb6af6086, type: 3}
   - {fileID: 8196736129239111019, guid: 587ad16e3c2b3e44ba6685280bc86513, type: 3}
   meteorsGroup: {fileID: 5193602961114684024}
-  meteorsCount: 6
+  meteorsCount: 12
   powerUp: {fileID: 4697785709899144872, guid: 17cf3ae6b5df19546a4cce5745914697, type: 3}
   powerUpsGroup: {fileID: 5193602960504894866}
-  powerUpsMaxCount: 3
+  powerUpsMaxCount: 6
   inner: {fileID: 5193602959904459044}
   outer: {fileID: 5193602960377135099}
   point: {fileID: 5503436536478087722, guid: b03091e6172316a41b4a789fcaf4c8c5, type: 3}
